@@ -1,8 +1,4 @@
-mkdir gxzj
-cd gxzj
-git init
-touch README.md
-git add README.md
-git commit -m "first commit"
-git remote add origin https://gitee.com/HuanMengKeJi/gxzj.git
-git push -u origin master
+共享纸巾机/共享售货机后端源码  
+JAVA的后台开发 ，属于商业项目， 
+不清楚的地方请QQ75039960
+
