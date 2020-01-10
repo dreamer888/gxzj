@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.DeviceIncomeTotalMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.DeviceIncomeTotal" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="deviceImei" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="payPaperSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="commissionSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="gzhIncomeSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, deviceNo, deviceImei, payPaperSum, commissionSum, gzhIncomeSum, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from device_income_total
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from device_income_total
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.DeviceIncomeTotal" >
+    insert into device_income_total (id, deviceNo, deviceImei, 
+      payPaperSum, commissionSum, gzhIncomeSum, 
+      createTime)
+    values (#{id,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, #{deviceImei,jdbcType=VARCHAR}, 
+      #{payPaperSum,jdbcType=INTEGER}, #{commissionSum,jdbcType=INTEGER}, #{gzhIncomeSum,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.DeviceIncomeTotal"   keyProperty="id" useGeneratedKeys="true" >
+    insert into device_income_total
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei,
+      </if>
+      <if test="payPaperSum != null" >
+        payPaperSum,
+      </if>
+      <if test="commissionSum != null" >
+        commissionSum,
+      </if>
+      <if test="gzhIncomeSum != null" >
+        gzhIncomeSum,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceImei != null" >
+        #{deviceImei,jdbcType=VARCHAR},
+      </if>
+      <if test="payPaperSum != null" >
+        #{payPaperSum,jdbcType=INTEGER},
+      </if>
+      <if test="commissionSum != null" >
+        #{commissionSum,jdbcType=INTEGER},
+      </if>
+      <if test="gzhIncomeSum != null" >
+        #{gzhIncomeSum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.DeviceIncomeTotal" >
+    update device_income_total
+    <set >
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      </if>
+      <if test="payPaperSum != null" >
+        payPaperSum = #{payPaperSum,jdbcType=INTEGER},
+      </if>
+      <if test="commissionSum != null" >
+        commissionSum = #{commissionSum,jdbcType=INTEGER},
+      </if>
+      <if test="gzhIncomeSum != null" >
+        gzhIncomeSum = #{gzhIncomeSum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.DeviceIncomeTotal" >
+    update device_income_total
+    set deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      payPaperSum = #{payPaperSum,jdbcType=INTEGER},
+      commissionSum = #{commissionSum,jdbcType=INTEGER},
+      gzhIncomeSum = #{gzhIncomeSum,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="query" resultType="java.util.HashMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />,
+    (gzhIncomeSum + payPaperSum + commissionSum)/100 incomeTotal
+    from device_income_total
+    <where>
+      <if test="createTime != null" >
+        and TO_DAYS(createTime) = TO_DAYS(#{createTime})
+      </if>
+      <if test="deviceNo != null" >
+        and deviceNo = #{deviceNo}
+      </if>
+    </where>
+    ORDER BY createTime DESC
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryCount" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    from device_income_total
+    <where>
+      <if test="createTime != null" >
+        and TO_DAYS(createTime) = TO_DAYS(#{createTime})
+      </if>
+      <if test="deviceNo != null" >
+        and deviceNo = #{deviceNo}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryTotal" resultType="java.util.HashMap" >
+    select
+    (sum(a.payPaperSum)+sum(a.commissionSum)) incomeTotal,
+    sum(a.payPaperSum) payPaperSum,
+    sum(a.gzhIncomeSum) gzhIncomeSum
+    from device_income_total a,agent_device_relation b
+    <where>
+      a.deviceNo = b.deviceNo
+      <if test="createTime != null" >
+        and TO_DAYS(a.createTime) = TO_DAYS(#{createTime})
+      </if>
+      <if test="agentId != null" >
+        and b.agentId = #{agentId}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryObjectToday" resultType="com.dlc.modules.api.entity.DeviceIncomeTotal" parameterType="com.dlc.modules.api.entity.DeviceIncomeTotal" >
+    select
+    <include refid="Base_Column_List" />
+    from device_income_total
+    WHERE
+    TO_DAYS(createTime) = TO_DAYS(now()) and deviceNo = #{deviceNo}
+  </select>
+
+  <update id="updateTotal" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    update device_income_total
+    <set >
+      <if test="payPaperSum != null" >
+        payPaperSum = payPaperSum + #{payPaperSum,jdbcType=INTEGER},
+      </if>
+      <if test="commissionSum != null" >
+        commissionSum = commissionSum + #{commissionSum,jdbcType=INTEGER},
+      </if>
+      <if test="gzhIncomeSum != null" >
+        gzhIncomeSum = gzhIncomeSum + #{gzhIncomeSum,jdbcType=INTEGER},
+      </if>
+
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

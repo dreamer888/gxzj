@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.DeviceConsumeTotalDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.DeviceConsumeTotalEntity" id="deviceConsumeTotalMap">
+        <result property="id" column="id"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="deviceImei" column="deviceImei"/>
+        <result property="freePaperTotal" column="freePaperTotal"/>
+        <result property="payPaperTotal" column="payPaperTotal"/>
+        <result property="gzhLikeTotal" column="gzhLikeTotal"/>
+		<result property="createTime" column="createTime"/>
+		<result property="goodsPrice" column="goodsPrice"/>
+		<result property="name" column="name"/>
+		<result property="price" column="price"/>
+		<result property="goodsPrice" column="goodsPrice"/>
+		<result property="deviceId" column="deviceId"/>
+		<result property="sumDevice" column="sumDevice"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.DeviceConsumeTotalEntity">
+		select * from device_consume_total where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.DeviceConsumeTotalEntity">
+		select dct.*,d.goodsPrice,a.`name` from device_consume_total dct LEFT JOIN device d ON dct.deviceImei = d.imei
+		LEFT JOIN agent_device_relation adr ON adr.deviceImei = d.imei LEFT JOIN agent a ON a.id = adr.agentId
+		<where>
+			<if test="name!=null and name != ''">
+				AND a.name LIKE concat('%',#{name},'%')
+			</if>
+			<if test="deviceNo!=null and deviceNo != ''">
+				AND dct.deviceNo LIKE concat('%',#{deviceNo},'%')
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND dct.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND dct.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by dct.createTime desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from device_income_total i
+		LEFT JOIN agent_device_relation d ON i.deviceImei = d.deviceImei
+		LEFT JOIN agent a ON a.id = d.agentId
+		LEFT JOIN device e ON e.imei = d.deviceImei
+		<where>
+			<if test="name!=null and name != ''">
+				AND a.name LIKE concat('%',#{name},'%')
+			</if>
+			<if test="deviceNo!=null and deviceNo != ''">
+				AND i.deviceNo LIKE concat('%',#{deviceNo},'%')
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND i.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND i.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryCountPrice" resultType="int">
+		select SUM(dct.payPaperTotal*goodsPrice) from device_consume_total dct
+		LEFT JOIN device d ON dct.deviceImei = d.imei
+		LEFT JOIN agent_device_relation adr ON adr.deviceImei = d.imei
+		LEFT JOIN agent a ON a.id = adr.agentId
+	</select>
+
+	<!--<delete id="delete">
+		delete from about_us where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from about_us where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>-->
+
+</mapper>

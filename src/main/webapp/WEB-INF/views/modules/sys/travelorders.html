@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>行程订单</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<!--<div class="grid-btn">
+			<a v-if="hasPermission('sys:travelorders:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('sys:travelorders:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('sys:travelorders:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>-->
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">订单号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.orderNo" placeholder="订单号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">出发地</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.startPlace" placeholder="出发地"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">目的地</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.endPlace" placeholder="目的地"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">出发时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.startDate" placeholder="出发时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">联系方式</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.phone" placeholder="联系方式"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">人数</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.peopleNum" placeholder="人数"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">应付，单位分</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.pay" placeholder="应付，单位分"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">优惠券</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.coupon" placeholder="优惠券"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">实付，单位分</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.realPay" placeholder="实付，单位分"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">开始经度</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.startLongitude" placeholder="开始经度"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">开始纬度</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.startLatitude" placeholder="开始纬度"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">结束经度</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.endLongitude" placeholder="结束经度"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">结束纬度</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.endLatitude" placeholder="结束纬度"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">接单状态，0 待接单，1 确认接单，2 已上车，3 已到达，4 已完成，默认0</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.status" placeholder="接单状态，0 待接单，1 确认接单，2 已上车，3 已到达，4 已完成，默认0"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">司机ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.driverId" placeholder="司机ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">订单类型，1 拼车订单，2 物品寄送</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.type" placeholder="订单类型，1 拼车订单，2 物品寄送"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">替人叫车，1普通叫车，2 替人叫车</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.isCallCar" placeholder="替人叫车，1普通叫车，2 替人叫车"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">其他备注信息</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.remark" placeholder="其他备注信息"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否包车</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.isCharterBus" placeholder="是否包车"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">物品属性</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.property" placeholder="物品属性"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="travelOrders.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/travelorders.js?_${.now?long}"></script>
+
+</body>
+</html>

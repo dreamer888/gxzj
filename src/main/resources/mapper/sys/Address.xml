@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.AddressDao" >
+
+
+
+  <select id="select" resultType="map">
+    select
+    addressId,addr
+    from address
+  </select>
+
+  <select id="queryObject" resultType="com.dlc.modules.sys.entity.AddressEntity">
+    select
+    *
+    from address
+    where addressId = #{addressId}
+  </select>
+</mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:height="http://www.w3.org/1999/xhtml">
+<head>
+    <title>关于我们</title>
+    <#include "/header.html">
+        <style>
+            .logo .logo_img{
+                width: 150px;
+                height: 150px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+        </style>
+        </head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <#if shiro.hasPermission("sys:aboutus:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form id="logoForm" enctype="multipart/form-data" method="post" class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">网址站点</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="aboutUs.webSite" placeholder="网址站点"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">客服电话</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="aboutUs.tel" placeholder="客服电话"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">版本号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="aboutUs.version" placeholder="版本号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">app名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="aboutUs.appName" placeholder="app名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">内容</div>
+                <div class="col-sm-10">
+					<textarea  class="form-control" style="height: 110px;"  v-model="aboutUs.content" placeholder="内容">
+						{{aboutUs.content}}
+					</textarea>
+
+                    <!--<input type="textarea " class="form-control" v-model="aboutUs.content" placeholder="内容" style="height:111px"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">Logo图</div>
+                <div class="col-sm-10 logo">
+                    <img id="logoImage" src="" class="logo_img">
+                    <input type="file" name="file" class="upload_file" @change="uploadImage" placeholder="商标"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">banner图</div>
+                <div class="col-sm-10 logo">
+                    <img id="logoImage1" src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <input type="file" name="file" class="upload_file"  @change="uploadBanner" placeholder="banner图"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/qd/aboutus.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>商品支付流水</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+
+			<!--<a v-if="hasPermission('sys:goodstraderecord:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('sys:goodstraderecord:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('sys:goodstraderecord:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">订单号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.orderNo" placeholder="订单号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">用户ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.userId" placeholder="用户ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">流水号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.serialNum" placeholder="流水号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">交易金额，单位分</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.tradeAmout" placeholder="交易金额，单位分"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">交易类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.tradeType" placeholder="交易类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="goodsTradeRecord.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../../js/modules/sys/goodstraderecord.js"></script>
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/goodstraderecord.js?_${.now?long}"></script>
+</body>
+</html>

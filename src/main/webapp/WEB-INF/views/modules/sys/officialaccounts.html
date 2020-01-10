@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+    <title>公众号管理表</title>
+    <#include "/header.html">
+        </head>
+        <style>
+            .logo {
+                display: inline-block;
+                text-align: center;
+                margin-right: 15px;
+            }
+            .logo .logo_img{
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+            .upload {
+                margin: 5px 0 15px 0px;
+            }
+        </style>
+
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <#if shiro.hasPermission("sys:officialaccounts:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+            <#if shiro.hasPermission("sys:officialaccounts:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+            <#if shiro.hasPermission("sys:officialaccounts:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">公众号名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.name" placeholder="公众号名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">AppId</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.appId" placeholder="AppId"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">appSecret</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.appSecret"
+                           placeholder="appSecret"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">免费领取代码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.freeCode" placeholder="免费领取代码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">微信号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.wxCount" placeholder="微信号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原价(元)</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.originalPrice"
+                           placeholder="原价"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">分成单价(元)</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.deductPrice"
+                           placeholder="分成单价"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">每日关注上限</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.upperLimit" placeholder="每日关注上限"/>
+                </div>
+            </div>
+           <!-- <div class="form-group">
+                <div class="col-sm-2 control-label">公众号LOG</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.imgUrl" placeholder="公众号log地址"/>
+                </div>
+            </div>-->
+
+            <div id="images" class="form-group">
+                <div class="col-sm-2 control-label">公众号LOGO</div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+
+                    <label class="radio-inline">
+                        <input type="radio" name="status" value="1" v-model="officialAccounts.status"/> 上架
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" value="2" v-model="officialAccounts.status"/> 下架
+                    </label>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">省</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.province" placeholder="省"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">市</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.city" placeholder="市"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="officialAccounts.area" placeholder="区"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">公众号投放区域</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" @click="selectAddress" v-model="officialAccounts.address" placeholder="公众号投放区域" readonly="readonly"/>
+                </div>
+            </div>
+           <!-- <div class="form-group">
+                <div class="col-sm-2 control-label">代理商</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" readonly="readonly" placeholder="全部代理商"/>
+                </div>
+            </div>-->
+            <div id="addressLayer" style="display: none;padding:10px;">
+                <ul class="list-unstyled" v-for="(e,i) in addressData">
+                    <li @click="liClick" v-bind:data-index="i">{{e.name}}</li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/officialaccounts.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+</body>
+</html>

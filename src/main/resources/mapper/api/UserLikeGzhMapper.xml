@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.UserLikeGzhMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.UserLikeGzh" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="appId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="gzhName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, appId, gzhName, openId, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_like_gzh
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_like_gzh
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.UserLikeGzh" >
+    insert into user_like_gzh (id, appId, gzhName, 
+      openId, createTime)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{gzhName,jdbcType=VARCHAR}, 
+      #{openId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.UserLikeGzh" >
+    insert into user_like_gzh
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="appId != null" >
+        appId,
+      </if>
+      <if test="gzhName != null" >
+        gzhName,
+      </if>
+      <if test="openId != null" >
+        openId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="gzhName != null" >
+        #{gzhName,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.UserLikeGzh" >
+    update user_like_gzh
+    <set >
+      <if test="appId != null" >
+        appId = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="gzhName != null" >
+        gzhName = #{gzhName,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        openId = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.UserLikeGzh" >
+    update user_like_gzh
+    set appId = #{appId,jdbcType=VARCHAR},
+      gzhName = #{gzhName,jdbcType=VARCHAR},
+      openId = #{openId,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

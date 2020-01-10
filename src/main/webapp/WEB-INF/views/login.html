@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>共享纸巾机后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
+    <link rel="stylesheet" media="screen" href="${request.contextPath}/statics/css/style.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition login-page">
+<!-- count particles -->
+<div class="count-particles">
+    <!--<span class="js-count-particles">&#45;&#45;</span>-->
+</div>
+
+<!-- particles.js container -->
+<div id="particles-js"></div>
+<div class="login-box" id="rrapp" v-cloak style="position: absolute;left: 40%;top: 10%">
+    <div class="login-logo" style="width: 400px;">
+        <b>共享纸巾机后台管理系统</b>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">管理员登录</p>
+        <div v-if="error" class="alert alert-danger alert-dismissible">
+            <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control" v-model="username" placeholder="账号">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password" class="form-control" v-model="password" placeholder="密码">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
+            <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
+            &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="checkbox icheck">
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.social-auth-links -->
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+</div>
+
+<!-- /.login-box -->
+<script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
+<script src="${request.contextPath}/statics/libs/vue.min.js"></script>
+<script src="${request.contextPath}/statics/libs/bootstrap.min.js"></script>
+<script src="${request.contextPath}/statics/libs/jquery.slimscroll.min.js"></script>
+<script src="${request.contextPath}/statics/libs/fastclick.min.js"></script>
+<!--<script src="${request.contextPath}/statics/libs/app.js"></script>-->
+<!-- scripts -->
+<script src="${request.contextPath}/statics/js/particles.min.js"></script>
+<script src="${request.contextPath}/statics/js/app.js"></script>
+<!-- stats.js -->
+<script src="${request.contextPath}/statics/js/lib/stats.js"></script>
+<script>
+    var count_particles, stats, update;
+    stats = new Stats;
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.body.appendChild(stats.domElement);
+    count_particles = document.querySelector('.js-count-particles');
+    update = function () {
+        stats.begin();
+        stats.end();
+        requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+</script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#rrapp',
+        data: {
+            username: '',
+            password: '',
+            captcha: '',
+            error: false,
+            errorMsg: '',
+            src: 'captcha.jpg'
+        },
+        beforeCreate: function () {
+            if (self != top) {
+                top.location.href = self.location.href;
+            }
+        },
+        methods: {
+            refreshCode: function () {
+                this.src = "captcha.jpg?t=" + $.now();
+            },
+            login: function (event) {
+                var data = "username=" + vm.username + "&password=" + vm.password + "&captcha=" + vm.captcha;
+                $.ajax({
+                    type: "POST",
+                    url: "sys/login",
+                    data: data,
+                    dataType: "json",
+                    success: function (r) {
+                        if (r.code == 0) {//登录成功
+                            parent.location.href = 'index.html';
+                        } else {
+                            vm.error = true;
+                            vm.errorMsg = r.msg;
+
+                            vm.refreshCode();
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

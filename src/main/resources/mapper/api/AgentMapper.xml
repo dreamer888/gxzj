@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.AgentMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Agent" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="parentId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="headImgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wallet" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="role" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="deleteStatus" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="role" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="deleteStatus" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="commissionType" jdbcType="TINYINT" javaType="java.lang.Integer" />
+      <arg column="commissionValue" jdbcType="TINYINT" javaType="java.lang.Integer" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <!--获取用户openId-->
+  <select id="getOpenId" resultType="java.lang.String" parameterType="java.lang.Long">
+    SELECT openId FROM agent WHERE id = #{userId}
+  </select>
+
+  <!--我的账号信息-->
+  <select id="queryAgentInfo" resultType="map" parameterType="java.lang.Long">
+    SELECT name, headImgUrl, phone,password
+    FROM agent
+    WHERE id = #{id}
+  </select>
+  <!--更新头像或者个人信息-->
+  <update id="updataHeadImgOrInfo" parameterType="com.dlc.modules.api.entity.Agent">
+    update agent
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="wallet != null" >
+        wallet = #{wallet,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=TINYINT},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionValue != null" >
+        commissionValue = #{commissionValue,jdbcType=TINYINT},
+      </if>
+      <if test="commissionType != null" >
+        commissionType = #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="openId != null" >
+        openId = #{openId,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    WHERE id = #{id}
+  </update>
+
+  <sql id="Base_Column_List" >
+    id, parentId, type, name, headImgUrl, phone, password, wallet, status, role, deleteStatus, 
+    city,commissionValue,commissionType,openId,createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.dlc.modules.api.entity.Agent" parameterType="java.lang.Long" >
+    select id,parentId,wallet,type,status,openId
+    from agent
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from agent
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Agent" >
+    insert into agent (id, parentId, type, 
+      name, headImgUrl, phone, 
+      password, wallet, status, 
+      role, deleteStatus, city,commissionValue,commissionType,
+      createTime)
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT},
+      #{name,jdbcType=VARCHAR}, #{headImgUrl,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{wallet,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{role,jdbcType=TINYINT}, #{deleteStatus,jdbcType=TINYINT}, #{city,jdbcType=VARCHAR},
+      #{commissionValue,jdbcType=TINYINT},#{openId,jdbcType=VARCHAR},#{commissionType,jdbcType=TINYINT},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.Agent" >
+    insert into agent
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parentId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="wallet != null" >
+        wallet,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="commissionValue != null" >
+            commissionValue,
+      </if>
+      <if test="commissionType != null" >
+        commissionType,
+      </if>
+      <if test="openId != null" >
+            openId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="wallet != null" >
+        #{wallet,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=TINYINT},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionValue != null" >
+        #{commissionValue,jdbcType=TINYINT},
+      </if>
+        <if test="commissionType != null" >
+            #{commissionType,jdbcType=TINYINT},
+        </if>
+        <if test="openId != null" >
+            #{openId,jdbcType=VARCHAR},
+        </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Agent" >
+    update agent
+    <set >
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="wallet != null" >
+        wallet = #{wallet,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=TINYINT},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionType != null" >
+          commissionType = #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionValue != null" >
+          commissionValue = #{commissionValue,jdbcType=TINYINT},
+      </if>
+        <if test="openId != null" >
+            openId = #{openId,jdbcType=VARCHAR},
+        </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Agent" >
+    update agent
+    set parentId = #{parentId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      name = #{name,jdbcType=VARCHAR},
+      headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      wallet = #{wallet,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      role = #{role,jdbcType=TINYINT},
+      deleteStatus = #{deleteStatus,jdbcType=TINYINT},
+      city = #{city,jdbcType=VARCHAR},
+      commissionValue = #{commissionValue,jdbcType=TINYINT},
+      commissionType = #{commissionType,jdbcType=TINYINT},
+      openId = #{openId,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="findAgentByPhoneAndPwd" resultType="com.dlc.modules.api.vo.AgentVo"  parameterType="com.dlc.modules.api.entity.Agent">
+        select
+          a.id,a.parentId,a.name,a.phone,a.password,a.type,a.status,a.role,a.openId,b.name parentName
+        from agent a
+        LEFT JOIN agent b ON a.parentId = b.id
+        where a.phone = #{phone,jdbcType=VARCHAR} AND a.password = #{password,jdbcType=VARCHAR}
+         AND a.status = 1 AND a.deleteStatus = 0
+    </select>
+
+    <select id="getAgentByPhone" resultType="map" parameterType="java.lang.String" >
+        select id,name from agent
+        where phone = #{phone,jdbcType=VARCHAR} AND deleteStatus = 0
+    </select>
+
+    <select id="listEmployee" parameterType="map" resultType="map">
+      SELECT id,name,type,phone,status FROM agent
+      <where>
+          parentId = #{agentId} AND deleteStatus = 0 AND role = 0
+          <if test="type != null" >
+              AND type = #{type}
+          </if>
+          <if test="status != null" >
+             AND status = #{status}
+          </if>
+      </where>
+         ORDER BY createTime DESC
+    </select>
+
+
+    <select id="listAgent" parameterType="map" resultType="map">
+        SELECT id,name,role,phone,status,wallet FROM agent
+        <where>
+            parentId = #{agentId} AND deleteStatus = 0 AND role > 0
+            <if test="role != null" >
+                AND role = #{role}
+            </if>
+            <if test="status != null" >
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="deleteAgent" parameterType="java.lang.Long">
+        UPDATE agent set deleteStatus = 1  WHERE id = #{agentId}
+    </select>
+
+    <select id="findAgentByAgentId" resultType="com.dlc.modules.api.entity.Agent">
+        SELECT id,wallet FROM agent WHERE id = #{agentId}
+    </select>
+    <select id="selectAgentById" parameterType="com.dlc.modules.api.entity.Agent">
+      SELECT id FROM agent WHERE id = #{id}
+    </select>
+
+  <select id="selectParent"  resultType="com.dlc.modules.api.entity.Agent">
+    SELECT id,name,phone FROM agent WHERE id = #{parentId}
+  </select>
+
+    <select id="findEmployee" resultType="map" parameterType="java.lang.Long">
+        SELECT name,phone,status FROM agent WHERE id = #{agentId}
+    </select>
+
+    <select id="findAgent" resultType="map" parameterType="java.lang.Long">
+        SELECT role,city,name,phone,status,commissionType,commissionValue FROM agent WHERE id = #{agentId}
+    </select>
+</mapper>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>广告审核</title>
+    <#include "/header.html">
+        <style>
+            .logo {
+                display: inline-block;
+                text-align: center;
+                margin-right: 15px;
+            }
+            .logo .logo_img{
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+            .upload {
+                margin: 5px 0 15px 0px;
+            }
+        </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <select class="form-control" v-model="q.status">
+                    <option value="" selected="selected">全部</option>
+                    <option value="1" >审核中</option>
+                    <option value="2" >待投放</option>
+                    <option value="3" >投放中</option>
+                    <option value="4" >已结束</option>
+                    <option value="5" >审核失败</option>
+                </select>
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+
+            <#if shiro.hasPermission("sys:advertising:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;审核</a>
+            </#if>
+             <a href="javascript:void(0);" class="btn btn-primary" @click="object"><i class="fa fa-pencil-square-o"></i>&nbsp;详情</a>
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+<!--审核内容-->
+    <div v-show="!showList2" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width: 80%;" id="ueditorForm" action="" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告类型</div>
+                <div class="form-group col-sm-10">
+                    <select class="form-control" v-model="advertising.type" disabled="disabled" >
+                        <option value="1" >CPC</option>
+                        <option value="2" >CPM</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放城市</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.city" readonly="readonly" placeholder="投放城市"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放性别</div>
+                <div class="form-group col-sm-10">
+                    <select class="form-control" v-model="advertising.sex" disabled="disabled" >
+                        <option value="1" >全部</option>
+                        <option value="2" >男</option>
+                        <option value="3" >女</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放年龄</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.age" readonly="readonly" placeholder="投放年龄"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费水平</div>
+                <div class="form-group col-sm-10">
+                    <select class="form-control" v-model="advertising.moneyLevel" disabled="disabled" >
+                        <option value="1" >全部</option>
+                        <option value="2" >高</option>
+                    <option value="3" >中</option>
+                    <option value="4" >低</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告价格</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.price" readonly="readonly" placeholder="广告价格(元)"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.name" readonly="readonly" placeholder="广告名称"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告链接</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.link" readonly="readonly" placeholder="广告链接"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放开始时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.strStartDate" readonly="readonly" placeholder="投放开始时间"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放结束时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.strEndDate" readonly="readonly" placeholder="投放结束时间"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">审核状态</div>
+                <div class="form-group col-sm-10">
+                    <select class="form-control" v-model="advertising.status" disabled="disabled" >
+                        <option value="1" >审核中</option>
+                        <option value="2" >待投放</option>
+                        <option value="3" >投放中</option>
+                        <option value="4" >已结束</option>
+                        <option value="5" >审核失败</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="images" class="">
+              <div class="col-sm-2 control-label">广告图</div>
+              <div class="logo">
+                  <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                  <!--<a class="btn btn-primary btn-xs upload">上传</a>-->
+              </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">审核失败原因</div>
+                <div class="col-sm-10">
+                    <!--<input type="text" class="form-control" v-model="advertising.auditFailRemark" placeholder="审核失败原因"/>-->
+                    <textarea rows="5" cols="126" v-model="advertising.auditFailRemark" placeholder="审核成功不用填写原因，审核失败要填写失败原因"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="通过"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-primary" @click="saveOrUpdates" value="不通过"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!--详情内容-->
+    <div v-show="!showObject" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width: 50%;" id="ueditorForms" action="" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告类型：</div>
+                <div class="form-group col-sm-10" style="margin-top: 1%;">
+                    <label v-if="advertising.type == 1">CPC</label>
+                    <label v-if="advertising.type == 2">CPM</label>
+                    <!--<select class="form-control" v-model="advertising.type" disabled="disabled" >
+                        <option value="1" >CPC</option>
+                        <option value="2" >CPM</option>
+                    </select>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放城市：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.city}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.city" readonly="readonly" placeholder="投放城市"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放性别：</div>
+                <div class="form-group col-sm-10" style="margin-top: 1%;">
+                    <label v-if="advertising.sex == 1">全部</label>
+                    <label v-if="advertising.sex == 2">男</label>
+                    <label v-if="advertising.sex == 3">女</label>
+                    <!--<select class="form-control" v-model="advertising.sex" disabled="disabled" >
+                        <option value="1" >全部</option>
+                        <option value="2" >男</option>
+                        <option value="3" >女</option>
+                    </select>-->
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放年龄：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.age}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.age" readonly="readonly" placeholder="投放年龄"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费水平：</div>
+                <div class="form-group col-sm-10" style="margin-top: 1%;">
+                    <label v-if="advertising.moneyLevel == 1">全部</label>
+                    <label v-if="advertising.moneyLevel == 2">高</label>
+                    <label v-if="advertising.moneyLevel == 3">中</label>
+                    <label v-if="advertising.moneyLevel == 4">低</label>
+                    <!--<select class="form-control" v-model="advertising.moneyLevel" disabled="disabled" >
+                        <option value="1" >全部</option>
+                        <option value="2" >高</option>
+                        <option value="3" >中</option>
+                        <option value="4" >低</option>
+                    </select>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告价格：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.price}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.price" readonly="readonly" placeholder="广告价格(元)"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告名称：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.name}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.name" readonly="readonly" placeholder="广告名称"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告链接：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.link}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.link" readonly="readonly" placeholder="广告链接"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放开始时间：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.strStartDate}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.strStartDate" readonly="readonly" placeholder="投放开始时间"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放结束时间：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.strEndDate}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.strEndDate" readonly="readonly" placeholder="投放结束时间"/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">审核状态：</div>
+                <div class="form-group col-sm-10" style="margin-top: 1%;">
+                    <label v-if="advertising.status == 1">审核中</label>
+                    <label v-if="advertising.status == 2">待投放</label>
+                    <label v-if="advertising.status == 3">投放中</label>
+                    <label v-if="advertising.status == 4">已结束</label>
+                    <label v-if="advertising.status == 5">审核失败</label>
+                    <!--<select class="form-control" v-model="advertising.status" disabled="disabled" >
+                        <option value="1" >审核中</option>
+                        <option value="2" >待投放</option>
+                        <option value="3" >投放中</option>
+                        <option value="4" >已结束</option>
+                        <option value="5" >审核失败</option>
+                    </select>-->
+                </div>
+            </div>
+
+            <div id="image" class="">
+                <div class="col-sm-2 control-label">广告图：</div>
+                <div class="logo">
+                    <img @click="previews" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <!--<a class="btn btn-primary btn-xs upload">上传</a>-->
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">审核失败原因：</div>
+                <div class="col-sm-10" style="margin-top: 1%;">
+                    <label>{{advertising.auditFailRemark}}</label>
+                    <!--<input type="text" class="form-control" v-model="advertising.auditFailRemark" placeholder="审核失败原因"/>-->
+                    <!--<textarea rows="5" cols="126" v-model="advertising.auditFailRemark" placeholder="审核成功不用填写原因，审核失败要填写失败原因"></textarea>-->
+                </div>
+            </div>
+<br/>
+
+            <div class="form-group">
+                <div class="col-sm-5 control-label"></div>
+                <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/advertising.js?_${.now?long}"></script>
+
+</body>
+</html>

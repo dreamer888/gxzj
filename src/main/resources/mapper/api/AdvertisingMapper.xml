@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.AdvertisingMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Advertising" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <idArg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sex" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="age" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="moneyLevel" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="startTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="endTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="imgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="auditFailTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="auditFailRemark" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpmUseNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dlc.modules.api.entity.Advertising" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <idArg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sex" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="age" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="moneyLevel" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="startTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="endTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="imgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="auditFailTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="auditFailRemark" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpmUseNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="link" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <!--查询所有的广告-->
+  <select id="selectAllAdvList" resultType="com.dlc.modules.api.entity.Advertising">
+    SELECT id,name FROM advertising
+  </select>
+  <!--广告详情-->
+  <select id="selectAdvertising" resultType="map" parameterType="java.lang.Long">
+    SELECT id,userId,type,city,sex,age,moneyLevel,price,name,startTime,endTime,imgUrl,status,auditFailTime,auditFailRemark,link,cpmUseNum,createTime
+    FROM advertising
+    WHERE id = #{id}
+</select>
+  <!--根据广告id查询用户id-->
+    <select id="selectAdvertisingId" resultType="com.dlc.modules.api.entity.Advertising" parameterType="java.lang.Long">
+      SELECT userId,price,type FROM advertising WHERE id = #{id}
+    </select>
+  <!--查询广告列表-->
+  <select id="queryAdvertisingList" resultType="com.dlc.modules.api.entity.Advertising" parameterType="map">
+    SELECT id,userId,type,city,sex,age,moneyLevel,price,name,link,startTime,endTime,imgUrl,status,auditFailTime,auditFailRemark,link,cpmUseNum,createTime
+    FROM advertising
+    <where>
+      <if test="userId != null and userId != ''">
+        AND userId = #{userId}
+      </if>
+      <if test="status != null and status != ''">
+        AND status = #{status}
+      </if>
+    </where>
+    ORDER BY createTime DESC
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+
+  </select>
+  <!--广告条数-->
+  <select id="queryTotal" resultType="java.lang.Integer" parameterType="map">
+    SELECT COUNT(*) FROM advertising
+    <where>
+      <if test="status != null">
+        AND status = #{status}
+      </if>
+    </where>
+  </select>
+  <!--查询所有投放中的广告-->
+  <select id="selectAdvByStatus" resultType="com.dlc.modules.api.entity.Advertising" parameterType="java.lang.Long">
+    SELECT id,price,status,startTime,endTime FROM advertising WHERE userId = #{userId} AND status = 3
+  </select>
+   <!--查询所有审核通过的或者因余额不足下架的广告-->
+  <select id="findAdByStatus" resultType="com.dlc.modules.api.entity.Advertising">
+    SELECT id,userId,startTime,endTime,price,status,name
+    FROM advertising
+    WHERE status = 2 OR status = 4
+  </select>
+  <!--轮播图-->
+  <select id="sowingMapList" resultType="map" parameterType="map">
+    SELECT id,userId,type,city,sex,age,moneyLevel,price,name,link,startTime,endTime,imgUrl,status,auditFailTime,auditFailRemark,cpmUseNum,createTime
+    FROM advertising
+    WHERE status = 3 AND city LIKE concat('%',#{city},'%') AND (sex = #{sex} OR  sex = 1)
+  </select>
+  <!--根据广告统计表的advId查询出对应的广告 -->
+  <select id="selectAdById" resultType="com.dlc.modules.api.entity.Advertising" parameterType="java.lang.Long">
+    SELECT id,userId,type,city,sex,age,moneyLevel,price,name,link,startTime,endTime,imgUrl,status,auditFailTime,auditFailRemark,cpmUseNum,createTime
+    FROM advertising
+    WHERE id = #{advId}
+  </select>
+
+  <sql id="Base_Column_List" >
+    id,userId,type,city,sex,age,moneyLevel,price,name,startTime,endTime,imgUrl,status,auditFailTime,auditFailRemark,cpmUseNum,createTime
+  </sql>
+  <sql id="Blob_Column_List" >
+    link
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.dlc.modules.api.entity.Advertising" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from advertising
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from advertising
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Advertising" >
+    insert into advertising (id, userId, type, city,
+      sex, age, moneyLevel, 
+      price, name, startTime, 
+      endTime, imgUrl, status,auditFailTime,auditFailRemark, cpmUseNum,
+      createTime, link)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{city,jdbcType=VARCHAR},
+      #{sex,jdbcType=INTEGER}, #{age,jdbcType=VARCHAR}, #{moneyLevel,jdbcType=INTEGER}, 
+      #{price,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},#{auditFailTime,jdbcType=TIMESTAMP},
+      #{auditFailRemark,jdbcType=VARCHAR},#{cpmUseNum,jdbcType=INTEGER}
+      #{createTime,jdbcType=TIMESTAMP}, #{link,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="map" >
+    insert into advertising
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="moneyLevel != null" >
+        moneyLevel,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="auditFailTime != null" >
+        auditFailTime,
+      </if>
+      <if test="auditFailRemark != null" >
+        auditFailRemark,
+      </if>
+      <if test="cpmUseNum != null" >
+        cpmUseNum,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="link != null" >
+        link,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="moneyLevel != null" >
+        #{moneyLevel,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="auditFailTime != null" >
+        #{auditFailTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditFailRemark != null" >
+        #{auditFailRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cpmUseNum != null" >
+        #{cpmUseNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Advertising" >
+  update advertising
+  <set >
+    <if test="userId != null" >
+      userId = #{userId,jdbcType=BIGINT},
+    </if>
+    <if test="type != null" >
+      type = #{type,jdbcType=TINYINT},
+    </if>
+    <if test="city != null" >
+      city = #{city,jdbcType=VARCHAR},
+    </if>
+    <if test="sex != null" >
+      sex = #{sex,jdbcType=INTEGER},
+    </if>
+    <if test="age != null" >
+      age = #{age,jdbcType=VARCHAR},
+    </if>
+    <if test="moneyLevel != null" >
+      moneyLevel = #{moneyLevel,jdbcType=INTEGER},
+    </if>
+    <if test="price != null" >
+      price = #{price,jdbcType=INTEGER},
+    </if>
+    <if test="name != null" >
+      name = #{name,jdbcType=VARCHAR},
+    </if>
+    <if test="startTime != null" >
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="endTime != null" >
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="imgUrl != null" >
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null" >
+      status = #{status,jdbcType=INTEGER},
+    </if>
+    <if test="auditFailTime != null" >
+      auditFailTime = #{auditFailTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="auditFailRemark != null" >
+      auditFailRemark = #{auditFailRemark,jdbcType=VARCHAR},
+    </if>
+    <if test="cpmUseNum != null" >
+      cpmUseNum = #{cpmUseNum,jdbcType=INTEGER},
+    </if>
+    <if test="createTime != null" >
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="link != null" >
+      link = #{link,jdbcType=LONGVARCHAR},
+    </if>
+  </set>
+  where id = #{id,jdbcType=BIGINT}
+</update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dlc.modules.api.entity.Advertising" >
+    update advertising
+    set userId = #{userId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      city = #{city,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      age = #{age,jdbcType=VARCHAR},
+      moneyLevel = #{moneyLevel,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      auditFailTime = #{auditFailTime,jdbcType=TIMESTAMP},
+      auditFailRemark = #{auditFailRemark,jdbcType=VARCHAR},
+      cpmUseNum = #{cpmUseNum,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      link = #{link,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Advertising" >
+    update advertising
+    set userId = #{userId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      city = #{city,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      age = #{age,jdbcType=VARCHAR},
+      moneyLevel = #{moneyLevel,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      auditFailTime = #{auditFailTime,jdbcType=TIMESTAMP},
+      auditFailRemark = #{auditFailRemark,jdbcType=VARCHAR},
+      cpmUseNum = #{cpmUseNum,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.GzhIncomeDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.GzhIncomeDetail" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="appId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="gzhName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="likeNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="deviceImei" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, appId, gzhName, likeNum, deviceImei,deviceNo, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gzh_income_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from gzh_income_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.GzhIncomeDetail" >
+    insert into gzh_income_detail (id, appId, gzhName, 
+      likeNum, deviceImei,deviceNo, createTime
+      )
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{gzhName,jdbcType=VARCHAR}, 
+      #{likeNum,jdbcType=INTEGER}, #{deviceImei,jdbcType=VARCHAR}, #{deviceNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.GzhIncomeDetail" >
+    insert into gzh_income_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="appId != null" >
+        appId,
+      </if>
+      <if test="gzhName != null" >
+        gzhName,
+      </if>
+      <if test="likeNum != null" >
+        likeNum,
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei,
+      </if>
+        <if test="deviceNo != null" >
+            deviceNo,
+        </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="gzhName != null" >
+        #{gzhName,jdbcType=VARCHAR},
+      </if>
+      <if test="likeNum != null" >
+        #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="deviceImei != null" >
+        #{deviceImei,jdbcType=VARCHAR},
+      </if>
+        <if test="deviceNo != null" >
+            #{deviceNo,jdbcType=VARCHAR},
+        </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.GzhIncomeDetail" >
+    update gzh_income_detail
+    <set >
+      <if test="appId != null" >
+        appId = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="gzhName != null" >
+        gzhName = #{gzhName,jdbcType=VARCHAR},
+      </if>
+      <if test="likeNum != null" >
+        likeNum = #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      </if>
+        <if test="deviceNo != null" >
+            deviceNo = #{deviceNo,jdbcType=VARCHAR},
+        </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.GzhIncomeDetail" >
+    update gzh_income_detail
+    set appId = #{appId,jdbcType=VARCHAR},
+      gzhName = #{gzhName,jdbcType=VARCHAR},
+      likeNum = #{likeNum,jdbcType=INTEGER},
+      deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <select id="findIncomeDetail" resultType="com.dlc.modules.api.entity.GzhIncomeDetail" parameterType="com.dlc.modules.api.entity.GzhIncomeDetail">
+        SELECT id,likeNum,createTime FROM gzh_income_detail
+        WHERE appId = #{appId} AND deviceImei = #{deviceImei}
+        ORDER BY createTime DESC limit 1
+    </select>
+
+    <select id="queryOfficialAccountsListCount" resultType="string" parameterType="map">
+      SELECT g.likeNum
+      FROM gzh_income_detail g
+      WHERE g.appId = #{appId} AND g.deviceNo = #{deviceNo} AND g.createTime LIKE CONCAT('%',#{createTime},'%')
+
+    </select>
+
+</mapper>

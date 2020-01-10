@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.ProxyListDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.AgencyEntity" id="proxyMap">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parentId"/>
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+        <result property="headImgUrl" column="headImgUrl"/>
+        <result property="phone" column="phone"/>
+		<result property="password" column="password"/>
+		<result property="wallet" column="wallet"/>
+		<result property="status" column="status"/>
+		<result property="role" column="role"/>
+		<result property="deleteStatus" column="deleteStatus"/>
+		<result property="city" column="city"/>
+		<result property="commissionValue" column="commissionValue"/>
+		<result property="commissionType" column="commissionType"/>
+		<result property="createTime" column="createTime"/>
+		<result property="agentId" column="agentId"/>
+		<result property="money" column="money"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.AgencyEntity">
+		select * from agent where id = #{value}
+	</select>
+
+    <!--查询所有省代的代理商-->
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.AgencyEntity">
+		SELECT a.*,(select p.role from agent p WHERE p.id = a.parentId) AS parentName FROM agent a WHERE a.type = 2 AND a.deleteStatus = 0
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<!--判断父代代下面是否还有其他子代-->
+	<select id="queryListParentId" resultType="com.dlc.modules.sys.entity.AgencyEntity">
+		select * from agent where parentId = #{parentId} order by id asc
+	</select>
+
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from agent WHERE type = 2 AND role = 1
+	</select>
+
+	<select id="queryCommission" resultType="com.dlc.modules.sys.entity.AgencyEntity">
+		SELECT type,`name`,phone,city,role,commissionValue,commissionType,createTime FROM agent WHERE type = 2 AND `status` = 1
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.AgencyEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into agent
+		(
+			`type`,
+			`name`,
+			`headImgUrl`,
+			`phone`,
+          	`password`,
+          	`wallet`,
+          	`status`,
+			`role`,
+			`deleteStatus`,
+			`city`,
+			`commissionType`,
+			`commissionValue`
+		)
+		values
+		(
+			#{type},
+			#{name},
+			#{headImgUrl},
+			#{phone},
+			#{password},
+			0,
+			#{status},
+			#{role},
+			0,
+			#{city},
+			#{commissionType},
+			#{commissionValue}
+		)
+	</insert>
+
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.AgencyEntity">
+		update agent
+		<set>
+            <if test="name != null">`name` = #{name}, </if>
+			<if test="headImgUrl != null">`headImgUrl` = #{headImgUrl}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="role != null">`role` = #{role}, </if>
+			<if test="city != null">`city` = #{city},</if>
+			<if test="commissionType != null">`commissionType` = #{commissionType}, </if>
+			<if test="commissionValue != null">`commissionValue` = #{commissionValue}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<!--根据用户电话号码判断是否存在-->
+	<select id="queryByConditionProxy" resultType="map">
+		SELECT *
+		FROM agent
+		WHERE phone = #{phone}
+	</select>
+
+	<delete id="delete">
+		update agent set `deleteStatus` = 1 where id = #{id}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from agent where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

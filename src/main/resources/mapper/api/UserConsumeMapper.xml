@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.UserConsumeMapper">
+    <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.UserConsume">
+        <constructor>
+            <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="deviceId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="totalPrice" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="num" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte"/>
+            <arg column="type" jdbcType="TINYINT" javaType="java.lang.Byte"/>
+            <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="transactionNo" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="orderNo" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="goodsName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="goodsImgUrl" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="imei" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, deviceId, deviceNo, totalPrice, num, price, status, type, createTime, transactionNo, 
+    orderNo, goodsName, goodsImgUrl,openId,imei
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from user_consume
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user_consume
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.dlc.modules.api.entity.UserConsume">
+    insert into user_consume (id, deviceId, deviceNo, 
+      totalPrice, num, price, 
+      status, type, createTime, 
+      transactionNo, orderNo, goodsName, 
+      goodsImgUrl,openId,imei)
+    values (#{id,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, 
+      #{totalPrice,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{transactionNo,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, 
+      #{goodsImgUrl,jdbcType=VARCHAR},  #{openId,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR}))
+  </insert>
+    <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.UserConsume">
+        insert into user_consume
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="deviceId != null">
+                deviceId,
+            </if>
+            <if test="deviceNo != null">
+                deviceNo,
+            </if>
+            <if test="totalPrice != null">
+                totalPrice,
+            </if>
+            <if test="num != null">
+                num,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="transactionNo != null">
+                transactionNo,
+            </if>
+            <if test="orderNo != null">
+                orderNo,
+            </if>
+            <if test="goodsName != null">
+                goodsName,
+            </if>
+            <if test="goodsImgUrl != null">
+                goodsImgUrl,
+            </if>
+            <if test="openId != null">
+                openId,
+            </if>
+            <if test="imei != null">
+                imei,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="deviceId != null">
+                #{deviceId,jdbcType=BIGINT},
+            </if>
+            <if test="deviceNo != null">
+                #{deviceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="totalPrice != null">
+                #{totalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="num != null">
+                #{num,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="transactionNo != null">
+                #{transactionNo,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsName != null">
+                #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsImgUrl != null">
+                #{goodsImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="openId != null">
+                #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="imei != null">
+                #{imei,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.UserConsume">
+        update user_consume
+        <set>
+            <if test="deviceId != null">
+                deviceId = #{deviceId,jdbcType=BIGINT},
+            </if>
+            <if test="deviceNo != null">
+                deviceNo = #{deviceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="totalPrice != null">
+                totalPrice = #{totalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="num != null">
+                num = #{num,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="transactionNo != null">
+                transactionNo = #{transactionNo,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                orderNo = #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsName != null">
+                goodsName = #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsImgUrl != null">
+                goodsImgUrl = #{goodsImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="openId != null">
+                openId = #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="imei != null">
+                imei = #{imei,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.UserConsume">
+    update user_consume
+    set deviceId = #{deviceId,jdbcType=BIGINT},
+      deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      totalPrice = #{totalPrice,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      type = #{type,jdbcType=TINYINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      transactionNo = #{transactionNo,jdbcType=VARCHAR},
+      orderNo = #{orderNo,jdbcType=VARCHAR},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      goodsImgUrl = #{goodsImgUrl,jdbcType=VARCHAR},
+      openId = #{openId,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="queryUserOrderList" parameterType="map" resultType="map">
+        SELECT id,totalPrice,num,price,status,createTime,goodsName,goodsImgUrl
+        FROM user_consume
+        WHERE openId = #{openId}
+        ORDER BY createTime DESC
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+
+    </select>
+
+    <select id="queryUserOrderCount" resultType="int">
+        SELECT COUNT(1)
+        FROM user_consume
+        WHERE openId = #{openId}
+    </select>
+
+
+    <select id="queryUserOrderInfo" parameterType="long" resultType="map">
+    SELECT a.totalPrice,a.num,a.price,a.status,a.createTime,a.goodsName,a.goodsImgUrl,a.orderNo,a.transactionNo,b.addressDetail
+    FROM user_consume a
+    LEFT JOIN device b ON a.deviceNo = b.deviceNo
+    WHERE id = #{id}
+    </select>
+
+    <select id="queryDeviceImei" parameterType="String" resultType="map">
+        SELECT num,imei,deviceNo
+        FROM user_consume
+        WHERE orderNo = #{orderNo}
+    </select>
+
+    <update id="updateStatusAndTransactionNo" parameterType="com.dlc.modules.api.entity.UserConsume">
+        UPDATE user_consume SET status = #{status},transactionNo = #{transactionNo}
+         WHERE orderNo = #{orderNo}
+    </update>
+
+    <select id="queryUserOrderStatus" parameterType="String" resultType="int">
+      SELECT status
+      FROM user_consume
+      WHERE orderNo = #{orderNo}
+    </select>
+
+    <select id="queryUserOrderInfoOrderNo" parameterType="String" resultType="com.dlc.modules.api.entity.UserConsume">
+      SELECT *FROM user_consume a WHERE a.orderNo = #{orderNo}
+    </select>
+</mapper>

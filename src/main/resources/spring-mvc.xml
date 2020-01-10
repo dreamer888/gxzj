@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd        
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+     	http://www.springframework.org/schema/aop 
+     	http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/mvc 
+     	http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+     	http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task.xsd ">
+
+	<context:component-scan base-package="com.dlc" />
+	<context:annotation-config />
+	<mvc:default-servlet-handler />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<mvc:annotation-driven> 
+		<mvc:message-converters register-defaults="true">
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json</value>
+					</list>
+				</property>
+				<property name="features">
+					<list>
+						<value>WriteMapNullValue</value>
+						<value>QuoteFieldNames</value>
+						<!--<value>WriteDateUseDateFormat</value>-->
+						<!-- 禁用fastjson循环引用检测 -->
+						<value>DisableCircularReferenceDetect</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- FreeMarker视图解析器 默认视图 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="contentType" value="text/html; charset=utf-8" />
+		<property name="requestContextAttribute" value="request" />
+		<property name="cache" value="false" />
+		<property name="viewNames" value="*.html" />
+		<property name="suffix" value="" />
+		<property name="order" value="0" />
+	</bean>
+
+	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/" />
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="shiro" value-ref="shiroTag" />
+			</map>
+		</property>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="numberFormat">0.##</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- JSP视图解析器 -->
+	<bean id="viewResolverJsp" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="viewNames" value="*.jsp" />
+		<property name="suffix" value="" />
+		<property name="order" value="1" />
+	</bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1000000000" />
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**" />
+            <mvc:exclude-mapping path="/api/agent/register" />
+            <mvc:exclude-mapping path="/api/agent/login" />
+            <mvc:exclude-mapping path="/api/agent/sendCode" />
+            <mvc:exclude-mapping path="/api/agent/forgetPassword" />
+            <mvc:exclude-mapping path="/api/device/save" />
+            <mvc:exclude-mapping path="/api/pay/wxNotify" />
+            <mvc:exclude-mapping path="/api/walletDetail/reNotify" />
+            <mvc:exclude-mapping path="/api/pay/zfbNotify" />
+			<mvc:exclude-mapping path="/api/pay/goodsCallBk" />
+            <mvc:exclude-mapping path="/api/gl/**" />
+            <mvc:exclude-mapping path="/api/myWallet/goodsCallBk" />
+			<mvc:exclude-mapping path="/api/express/expressCallBack" />
+
+            <mvc:exclude-mapping path="/api/h5/**" />
+			<bean class="com.dlc.common.exception.LoginInterceptor"></bean>
+		</mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/**" />
+            <mvc:exclude-mapping path="/api/agent/register" />
+            <mvc:exclude-mapping path="/api/agent/login" />
+            <mvc:exclude-mapping path="/api/agent/sendCode" />
+            <mvc:exclude-mapping path="/api/agent/forgetPassword" />
+            <mvc:exclude-mapping path="/api/device/save" />
+            <mvc:exclude-mapping path="/api/pay/wxNotify" />
+            <mvc:exclude-mapping path="/api/walletDetail/reNotify" />
+            <mvc:exclude-mapping path="/api/pay/zfbNotify" />
+            <mvc:exclude-mapping path="/api/gl/**" />
+            <mvc:exclude-mapping path="/api/h5/**" />
+            <mvc:exclude-mapping path="/api/myWallet/goodsCallBk" />
+			<mvc:exclude-mapping path="/api/express/expressCallBack" />
+            <bean class="com.dlc.common.exception.OnLineInterceptor"></bean>
+        </mvc:interceptor>
+	</mvc:interceptors>
+
+
+
+	<task:annotation-driven />
+	<bean id="checkDeviceonLineTask" class="com.dlc.modules.api.schedule.CheckDeviceonLineTask"></bean>
+    <bean id="updateUserCountTask" class="com.dlc.modules.api.schedule.UpdateUserCountTask"></bean>
+    <bean id="payToUserTask" class="com.dlc.modules.api.schedule.PayToUserTask"></bean>
+
+    <task:scheduled-tasks>
+        <!--每周一0点执行一次-->
+        <!--清空用户每周领取纸巾数量-->
+        <task:scheduled ref="updateUserCountTask" method="updateUserCount" cron="0 0 0 ? * MON"/>
+    </task:scheduled-tasks>
+
+    <task:scheduled-tasks>
+        <!--每半个小时执行一次-->
+        <!--调用企业支付接口-->
+        <task:scheduled ref="payToUserTask" method="payToUser" cron="0 0/30 * * * ?"/>
+    </task:scheduled-tasks>
+
+	<!-- 检查设备活跃状态 -->
+    <task:scheduled-tasks>
+		<task:scheduled ref="checkDeviceonLineTask" method="check" cron="0 0/10 * * * *" />
+	</task:scheduled-tasks>
+
+	<!-- 注册RequestMappingHandlerMapping 和RequestMappingHandlerAdapter 两个bean。-->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.dlc.common.config.JsonObjectMapper"></bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+</beans>

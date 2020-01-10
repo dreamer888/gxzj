@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.AgentDao" >
+
+
+
+  <select id="queryListByType" resultType="map">
+    select
+    id,name
+    from agent
+    <where>
+        deleteStatus = 0 and status = 1
+      <if test="type != null ">
+        and type = #{type}
+      </if>
+    </where>
+  </select>
+
+    <update id="updateAgentWalletByUserId" parameterType="map">
+        UPDATE agent
+        SET wallet = #{wallet}
+        WHERE id = #{userId}
+    </update>
+
+    <select id="queryAgentWalletByUserId" parameterType="Long" resultType="map">
+        SELECT wallet FROM agent WHERE id= #{id}
+    </select>
+</mapper>

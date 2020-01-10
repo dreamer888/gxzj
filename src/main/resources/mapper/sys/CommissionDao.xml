@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.CommissionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.CommissionEntity" id="commissionMap">
+        <result property="id" column="id"/>
+        <result property="agentId" column="agentId"/>
+        <result property="money" column="money"/>
+        <result property="createTime" column="createTime"/>
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+		<result property="phone" column="phone"/>
+		<result property="role" column="role"/>
+		<result property="city" column="city"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.CommissionEntity">
+		select * from commission_detail where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.CommissionEntity">
+		SELECT cd.*,a.id,a.type,a.name,a.phone,a.role,a.city FROM commission_detail cd INNER JOIN agent a ON cd.agentId = a.id
+		<where>
+			a.type = 2
+			<if test="role !=null and role!=''">
+				AND role = #{role}
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND cd.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND cd.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by cd.id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from commission_detail c LEFT JOIN agent a ON c.agentId = a.id
+		<where>
+			a.type = 2
+			<if test="role !=null and role!=''">
+				AND role = #{role}
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND cd.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND cd.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+	</select>
+
+</mapper>

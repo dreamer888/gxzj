@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.ParamSetDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.ParamSetEntity" id="paramSetMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="paramValue" column="paramValue"/>
+        <result property="type" column="type"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.ParamSetEntity">
+		select * from param_set where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.ParamSetEntity">
+		select * from param_set
+
+        <where>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </where>
+
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from param_set
+	</select>
+
+	<!--根据参数名称判断是否已经存在-->
+	<select id="queryByConditions" resultType="map">
+		SELECT *
+		FROM param_set
+		WHERE name = #{name}
+	</select>
+	 
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.ParamSetEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into param_set
+		(
+			`name`,
+			`paramValue`,
+			`type`
+		)
+		values
+		(
+			#{name},
+			#{paramValue},
+			#{type}
+		)
+	</insert>
+
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.ParamSetEntity">
+		update param_set
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+            <if test="paramValue != null">`paramValue` = #{paramValue}, </if>
+			<if test="type != null">`type` = #{type}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+
+
+
+	<delete id="delete">
+		delete from param_set where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from param_set where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+    <select id="queryParamSetInfo" resultType="com.dlc.modules.sys.entity.ParamSetEntity">
+        SELECT *FROM param_set
+        WHERE type = 1
+        ORDER BY createTime DESC
+        LIMIT 0,1
+    </select>
+</mapper>

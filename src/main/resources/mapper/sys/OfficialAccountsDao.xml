@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.OfficialAccountsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.OfficialAccountsEntity" id="officialAccountsMap">
+        <result property="id" column="id"/>
+        <result property="agentId" column="agentId"/>
+        <result property="name" column="name"/>
+        <result property="appId" column="appId"/>
+        <result property="appSecret" column="appSecret"/>
+        <result property="freeCode" column="freeCode"/>
+        <result property="wxCount" column="wxCount"/>
+        <result property="originalPrice" column="originalPrice"/>
+        <result property="deductPrice" column="deductPrice"/>
+        <result property="upperLimit" column="upperLimit"/>
+        <result property="imgUrl" column="imgUrl"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="deviceId" column="deviceId"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.OfficialAccountsEntity">
+		select * from official_accounts where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.OfficialAccountsEntity">
+		SELECT o.*,a.phone,a.name AS agentName
+        FROM official_accounts o
+        LEFT JOIN agent a ON a.id = o.agentId
+
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from official_accounts 
+	</select>
+	 
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.OfficialAccountsEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into official_accounts
+		(
+			`agentId`, 
+			`name`, 
+			`appId`,
+			`appSecret`, 
+			`freeCode`, 
+			`wxCount`, 
+			`originalPrice`,
+			`area`,
+			`deductPrice`, 
+			`upperLimit`, 
+			`imgUrl`, 
+			`deviceNo`, 
+			`deviceId`, 
+			`status`, 
+			`createTime`,
+			`token`,
+			`serverURL`
+		)
+		values
+		(
+			#{agentId}, 
+			#{name}, 
+			#{appId}, 
+			#{appSecret}, 
+			#{freeCode}, 
+			#{wxCount}, 
+			#{originalPrice},
+			#{area},
+			#{deductPrice}, 
+			#{upperLimit}, 
+			#{imgUrl}, 
+			#{deviceNo}, 
+			#{deviceId}, 
+			#{status}, 
+			#{createTime},
+			#{token},
+			#{serverURL}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.OfficialAccountsEntity">
+		update official_accounts 
+		<set>
+			<if test="agentId != null">`agentId` = #{agentId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="appId != null">`appId` = #{appId}, </if>
+			<if test="appSecret != null">`appSecret` = #{appSecret}, </if>
+			<if test="freeCode != null">`freeCode` = #{freeCode}, </if>
+			<if test="wxCount != null">`wxCount` = #{wxCount}, </if>
+			<if test="area != null">`area` = #{area}, </if>
+			<if test="originalPrice != null">`originalPrice` = #{originalPrice}, </if>
+			<if test="deductPrice != null">`deductPrice` = #{deductPrice}, </if>
+			<if test="upperLimit != null">`upperLimit` = #{upperLimit}, </if>
+			<if test="imgUrl != null">`imgUrl` = #{imgUrl}, </if>
+			<if test="deviceNo != null">`deviceNo` = #{deviceNo}, </if>
+			<if test="deviceId != null">`deviceId` = #{deviceId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createTime != null">`createTime` = #{createTime},</if>
+			<if test="token != null">`token` = #{token}, </if>
+			<if test="serverURL != null">`serverURL` = #{serverURL}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from official_accounts where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from official_accounts where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+    <select id="queryAppId" resultType="com.dlc.modules.sys.entity.OfficialAccountsEntity">
+        select id,appId,deductPrice from official_accounts where appId = #{AppId}
+    </select>
+
+</mapper>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.AddressMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Address" >
+    <constructor >
+      <idArg column="addressId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="province" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addr" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="isDefault" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    addressId, name, phone, province, addr, isDefault, userId, status, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where addressId = #{addressId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from address
+    where addressId = #{addressId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Address" >
+    insert into address (addressId, name, phone, 
+      province, addr, isDefault, 
+      userId, status, createTime
+      )
+    values (#{addressId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{isDefault,jdbcType=TINYINT}, 
+      #{userId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="addressId" parameterType="com.dlc.modules.api.entity.Address" >
+    insert into address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addressId != null" >
+        addressId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="isDefault != null" >
+        isDefault,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addressId != null" >
+        #{addressId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        1,
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Address" >
+    update address
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        isDefault = #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where addressId = #{addressId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Address" >
+    update address
+    set name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      isDefault = #{isDefault,jdbcType=TINYINT},
+      userId = #{userId,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where addressId = #{addressId,jdbcType=BIGINT}
+  </update>
+
+  <!--收货地址列表-->
+  <select id="queryList"  resultType="map" parameterType="map">
+    SELECT * FROM address
+    <where>
+      <if test="userId != null and userId != '' ">
+        AND userId =#{userId}
+      </if>
+      <if test="addressId != null">
+        AND addressId = #{id}
+      </if>
+    </where>
+    AND status=1
+    ORDER BY isDefault DESC limit #{offset}, #{limit}
+  </select>
+
+  <!--新增地址-->
+  <insert id="Add" parameterType="com.dlc.modules.api.entity.Address">
+    INSERT INTO address(name,phone,province,addr,
+    isDefault,userId,status,createTime)
+    VALUES
+    (#{name},#{phone},#{province},#{addr},
+    #{isDefault},#{userId},1,NOW())
+  </insert>
+
+  <!--修改之前的默认地址-->
+  <update id="updateIsdefaultId" parameterType="com.dlc.modules.api.entity.Address">
+    UPDATE address
+    SET isDefault = 0
+    <where>
+      <if test="addressId!=null">
+        AND addressId != #{addressId}
+      </if>
+      <if test="userId!=null">
+        AND userId =#{userId}
+      </if>
+    </where>
+        AND status=1
+  </update>
+
+  <!--根据userId更改之前的默认地址为普通地址-->
+  <update id="chkAddressById">
+    UPDATE address set isDefault=0  WHERE userId=#{userId} AND isDefault=1 AND status=1
+  </update>
+
+  <!--设置为默认地址-->
+  <update id="changeAddressStatus" >
+    UPDATE address set isDefault=#{isDefault}  WHERE userId=#{userId} AND addressId=#{addressId}
+  </update>
+
+  <!--总记录条数-->
+  <select id="queryAddressCount" parameterType="map" resultType="int">
+    SELECT COUNT(1) FROM address
+  <where>
+   <if test="userId!=null">
+     AND userId =#{userId}
+   </if>
+  </where>
+    AND status=1
+  </select>
+</mapper>

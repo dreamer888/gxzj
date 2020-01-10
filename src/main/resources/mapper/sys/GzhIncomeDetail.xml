@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.GzhIncomeDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.GzhIncomeDetailEntity" id="gzhIncomeDetailMap">
+        <result property="id" column="id"/>
+        <result property="appId" column="appId"/>
+        <result property="gzhName" column="gzhName"/>
+        <result property="likeNum" column="likeNum"/>
+		<result property="deviceImei" column="deviceImei"/>
+        <result property="createTime" column="createTime"/>
+		<result property="name" column="aName"/>
+		<result property="name" column="oName"/>
+		<result property="originalPrice" column="originalPrice"/>
+		<result property="deductPrice" column="deductPrice"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.GzhIncomeDetailEntity">
+		select * from gzh_income_detail where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.GzhIncomeDetailEntity">
+		SELECT g.*,a.name as aName,o.`name` AS oName,o.originalPrice as originalPrice,o.deductPrice as deductPrice FROM gzh_income_detail g
+		LEFT JOIN official_accounts o ON g.appId = o.appId
+		LEFT JOIN agent a ON o.agentId = a.id
+		<where>
+			<if test="oName!=null and oName != ''">
+				AND o.name LIKE concat('%',#{oName},'%')
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND g.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND g.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by g.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from gzh_income_detail g
+		LEFT JOIN official_accounts o ON g.id = o.id
+		LEFT JOIN agent a ON o.agentId = a.id
+		<where>
+			<if test="gzhName!=null and gzhName != ''">
+				AND gzhName LIKE concat('%',#{gzhName},'%')
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND g.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND g.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryCountPrice" resultType="int">
+		SELECT SUM(likeNum*deductPrice) AS gzhcount FROM gzh_income_detail g
+		LEFT JOIN official_accounts o ON g.appId = o.appId
+		LEFT JOIN agent a ON o.agentId = a.id
+	</select>
+</mapper>

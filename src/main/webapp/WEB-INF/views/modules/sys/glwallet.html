@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>我的余额</title>
+    <#include "/header.html">
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-3">
+				<select class="form-control" v-model="q.type">
+					<option value="">全部</option>
+					<option value="4" >提现</option>
+					<option value="0" >个联的佣金</option>
+					<option value="2" >广告商充值</option>
+					<option value="1" >用户购买纸巾</option>
+					<option value="3" >代理商购买商品</option>
+				</select>
+			</div>
+
+			<div class="form-group col-md-2">
+				<input id="sdate" class="Wdate" style="width: 100%;padding: 5px 10px;" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true,maxDate:'#F{$dp.$D(\'edate\')}'})"  placeholder="开始时间"  />
+			</div>
+			<div class="form-group col-md-2">
+				<input id="edate" class="Wdate" style="width: 100%;padding: 5px 10px;" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true,minDate:'#F{$dp.$D(\'sdate\')}',startDate:'#F{$dp.$D(\'sdate\',{d:+1})}'})"  placeholder="结束时间" /><br>
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<h2>余额:&nbsp;<span style="color: red;">{{moneyTotal}}&nbsp;元</span></h2>
+		<!--<h1>余额：</h1><h2>{{moneyTotal}} 元</h2>-->
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div id="anewFileWindow" style="display: none;margin-left: 6%">
+		<br/>
+		<div class="form-group" style="padding-top: 4%;">
+			<div class="col-sm-2 control-label" style="padding-top: 2%">类型：</div>
+				<!--<input type="text" class="form-control" v-model="userLikeGzh.type" placeholder="类型"/>-->
+				<!--<span class="form-control" v-model="userLikeGzh.type">{{userLikeGzh.type}}</span>-->
+				<div class="form-group col-sm-10" style="padding-top: 2%">
+					<!--<select class="form-control" v-model="userLikeGzh.type" disabled="disabled">
+						<option value="4" >提现</option>
+						<option value="0" >个联的佣金</option>
+						<option value="2" >广告商充值</option>
+						<option value="1" >用户购买纸巾</option>
+						<option value="3" >代理商购买商品</option>
+					</select>-->
+					<span v-if="userLikeGzh.type == 0">个联的佣金</span>
+					<span v-if="userLikeGzh.type == 1">用户购买纸巾</span>
+					<span v-if="userLikeGzh.type == 2">广告商充值</span>
+					<span v-if="userLikeGzh.type == 3">代理商购买商品</span>
+					<span v-if="userLikeGzh.type == 4">提现</span>
+				</div>
+		</div>
+		<br/>
+		<div class="form-group" style="padding-top: 4%">
+			<div class="col-sm-2 control-label" style="padding-top: 1%">金额：</div>
+			<div class="col-sm-10">
+				{{userLikeGzh.money}}&nbsp;元
+				<!--<input type="text" class="form-control" v-model="userLikeGzh.money" disabled="disabled"/>-->
+			</div>
+		</div>
+		<br/>
+		<div class="form-group" style="padding-top: 4%">
+			<div class="col-sm-2 control-label" style="padding-top: 1%">操作时间：</div>
+			<div class="col-sm-10">
+				<!--<input type="text" class="form-control" v-model="userLikeGzh.createTimes" disabled="disabled"/>-->
+				{{userLikeGzh.createTimes}}
+			</div>
+		</div>
+		<!--<div class="form-group" style="padding-top: 6%">
+			<div class="col-sm-3 control-label"></div>
+			<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+		</div>-->
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/glwallet.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/plugins/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

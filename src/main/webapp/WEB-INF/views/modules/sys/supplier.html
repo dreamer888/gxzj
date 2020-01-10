@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>供货端列表</title>
+    <#include "/header.html">
+		<style>
+			.logo {
+				display: inline-block;
+				text-align: center;
+				margin-right: 15px;
+			}
+			.logo .logo_img{
+				width: 100px;
+				height: 100px;
+				display: block;
+			}
+			.logo .upload_file {
+				position: absolute;
+				top: 0;
+				width: 150px;
+				height: 150px;
+				opacity: 0;
+			}
+
+
+			.upload {
+				margin: 5px 0 15px 0px;
+			}
+
+			.upload-button {
+				position: fixed;
+				bottom: 0px;
+				right: 20px;
+			}
+
+		</style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.name"   @keyup.enter="query" placeholder="请输入供应商姓名">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+
+            <#if shiro.hasPermission("sys:supplier:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+            <#if shiro.hasPermission("sys:supplier:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+            <#if shiro.hasPermission("sys:supplier:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width: 80%;" id="ueditorForm" action="" method="post" enctype="multipart/form-data">
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">姓名</div>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" v-model="supplier.name" placeholder="姓名"/>
+				</div>
+			</div>
+
+			<div id="images" class="">
+				<div class="col-sm-2 control-label">用户头像</div>
+				<div class="logo">
+					<img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+					<a class="btn btn-primary btn-xs upload">上传</a>
+				</div>
+			</div>
+			<br/>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">电话</div>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" v-model="supplier.phone" placeholder="电话"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">密码</div>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" v-model="supplier.password" placeholder="密码"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">用户状态</div>
+				<div class="form-group col-sm-8">
+					<select class="form-control" v-model="supplier.status" >
+						<option value="1">启用</option>
+						<option value="2" >禁用</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/supplier.js?_${.now?long}"></script>
+
+</body>
+</html>

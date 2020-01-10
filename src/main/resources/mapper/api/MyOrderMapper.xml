@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.MyOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.MyOrder" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="producer" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="customer" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="orderNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addrId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="orderNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="transactionNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="goodsSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="realPayment" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="logisticsNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="logisticsName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="payTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="deliveryTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="tradeTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, producer, customer, orderNo, addrId, orderNum, transactionNo, goodsSum, realPayment, 
+    logisticsNo, logisticsName, status, payTime, deliveryTime, tradeTime, createTime
+  </sql>
+  <sql id="myorder_Column">
+    m.status,m.orderNo,m.deliveryTime,m.tradeTime,g.id,g.imgUrl,g.name AS goodsName,c.name,g.price,m.orderNum,m.goodsSum,m.logisticsNo,m.transactionNo,m.createTime,m.payTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from my_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from my_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.MyOrder" >
+    insert into my_order (id, producer, customer, 
+      orderNo, addrId, orderNum, 
+      transactionNo, goodsSum, realPayment, 
+      logisticsNo, logisticsName, status, 
+      payTime, deliveryTime, tradeTime, 
+      createTime)
+    values (#{id,jdbcType=BIGINT}, #{producer,jdbcType=BIGINT}, #{customer,jdbcType=BIGINT}, 
+      #{orderNo,jdbcType=VARCHAR}, #{addrId,jdbcType=BIGINT}, #{orderNum,jdbcType=INTEGER}, 
+      #{transactionNo,jdbcType=VARCHAR}, #{goodsSum,jdbcType=INTEGER}, #{realPayment,jdbcType=INTEGER}, 
+      #{logisticsNo,jdbcType=VARCHAR}, #{logisticsName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{payTime,jdbcType=TIMESTAMP}, #{deliveryTime,jdbcType=TIMESTAMP}, #{tradeTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.MyOrder" >
+    insert into my_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="producer != null" >
+        producer,
+      </if>
+      <if test="customer != null" >
+        customer,
+      </if>
+      <if test="orderNo != null" >
+        orderNo,
+      </if>
+      <if test="addrId != null" >
+        addrId,
+      </if>
+      <if test="orderNum != null" >
+        orderNum,
+      </if>
+      <if test="transactionNo != null" >
+        transactionNo,
+      </if>
+      <if test="goodsSum != null" >
+        goodsSum,
+      </if>
+      <if test="realPayment != null" >
+        realPayment,
+      </if>
+      <if test="logisticsNo != null" >
+        logisticsNo,
+      </if>
+      <if test="logisticsName != null" >
+        logisticsName,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="payTime != null" >
+        payTime,
+      </if>
+      <if test="deliveryTime != null" >
+        deliveryTime,
+      </if>
+      <if test="tradeTime != null" >
+        tradeTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="producer != null" >
+        #{producer,jdbcType=BIGINT},
+      </if>
+      <if test="customer != null" >
+        #{customer,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addrId != null" >
+        #{addrId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="transactionNo != null" >
+        #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSum != null" >
+        #{goodsSum,jdbcType=INTEGER},
+      </if>
+      <if test="realPayment != null" >
+        #{realPayment,jdbcType=INTEGER},
+      </if>
+      <if test="logisticsNo != null" >
+        #{logisticsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsName != null" >
+        #{logisticsName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryTime != null" >
+        #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.MyOrder" >
+    update my_order
+    <set >
+      <if test="producer != null" >
+        producer = #{producer,jdbcType=BIGINT},
+      </if>
+      <if test="customer != null" >
+        customer = #{customer,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        orderNo = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addrId != null" >
+        addrId = #{addrId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null" >
+        orderNum = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="transactionNo != null" >
+        transactionNo = #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSum != null" >
+        goodsSum = #{goodsSum,jdbcType=INTEGER},
+      </if>
+      <if test="realPayment != null" >
+        realPayment = #{realPayment,jdbcType=INTEGER},
+      </if>
+      <if test="logisticsNo != null" >
+        logisticsNo = #{logisticsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsName != null" >
+        logisticsName = #{logisticsName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="payTime != null" >
+        payTime = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryTime != null" >
+        deliveryTime = #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeTime != null" >
+        tradeTime = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.MyOrder" >
+    update my_order
+    set producer = #{producer,jdbcType=BIGINT},
+      customer = #{customer,jdbcType=BIGINT},
+      orderNo = #{orderNo,jdbcType=VARCHAR},
+      addrId = #{addrId,jdbcType=BIGINT},
+      orderNum = #{orderNum,jdbcType=INTEGER},
+      transactionNo = #{transactionNo,jdbcType=VARCHAR},
+      goodsSum = #{goodsSum,jdbcType=INTEGER},
+      realPayment = #{realPayment,jdbcType=INTEGER},
+      logisticsNo = #{logisticsNo,jdbcType=VARCHAR},
+      logisticsName = #{logisticsName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      payTime = #{payTime,jdbcType=TIMESTAMP},
+      deliveryTime = #{deliveryTime,jdbcType=TIMESTAMP},
+      tradeTime = #{tradeTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <!--供货端：订单管理查询-->
+  <select id="queryMyOrderList" resultType="map">
+    select m.status,m.orderNo,o.goodsPrice,m.company,m.realPayment,m.deliveryTime,m.tradeTime,c.name,m.orderNum,m.goodsSum,m.logisticsNo,m.transactionNo,m.createTime,m.payTime,
+    o.orderNo,o.categoryId,o.goodsId,o.goodsName,o.goodsNum,o.goodsPrice,o.imgUrl
+    from my_order m LEFT JOIN
+    order_detail o ON m.orderNo=o.orderNo LEFT JOIN
+    goods_category c on c.id=o.categoryId
+  <where>
+    <if test="userId!=null">
+      AND m.producer=#{userId}
+    </if>
+    <if test="status!=null">
+      AND m.status=#{status}
+    </if>
+    <if test="orderNo!=null">
+      AND m.orderNo=#{orderNo}
+    </if>
+  </where>
+    ORDER BY createTime DESC
+    limit #{offset}, #{limit}
+  </select>
+
+  <!--查询我的订单-->
+  <select id="queryMyOrder" parameterType="map" resultType="com.dlc.modules.api.entity.MyOrder">
+    select `status`,orderNo,company,realPayment,deliveryTime,producer,customer,addrId,
+      tradeTime,orderNum,goodsSum,logisticsName,logisticsNo,transactionNo,
+      createTime,payTime from my_order
+      <where>
+        <if test="customer!=null">
+        AND customer=#{customer}
+        </if>
+        <if test="producer!=null">
+        AND producer=#{producer}
+        </if>
+        <if test="status!=null">
+         AND status = #{status}
+        </if>
+      </where>
+         ORDER BY createTime DESC
+    limit #{offset}, #{limit}
+  </select>
+  <!--根据订单号查详情-->
+  <select id="queryMyOrderDetailList" parameterType="java.lang.String" resultType="com.dlc.modules.api.entity.OrderDetail">
+    SELECT goodsId,imgUrl,orderNum,goodsNum,goodsName,goodsPrice,categoryId,g.name AS cateName from order_detail o
+LEFT JOIN goods_category g ON o.categoryId = g.id
+WHERE orderNo=#{orderNo}
+
+  </select>
+  <!--根据addrId查询地址详情akon1-->
+  <!--<select id="queryAddressByUserId" parameterType="com.dlc.modules.api.entity.MyOrder" resultType="com.dlc.modules.api.entity.Address">
+    select a.* from my_order m INNER JOIN address a ON m.addrId=a.addressId WHERE addrId=#{addrId} AND a.status=1 GROUP BY addressId
+  </select>-->
+
+  <!--根据orderNo查询订单详情akon3-->
+  <!--<select id="queryDetailList" parameterType="com.dlc.modules.api.entity.MyOrder" resultType="com.dlc.modules.api.entity.OrderDetail">
+    select o.* from my_order m INNER JOIN order_detail o ON m.orderNo=o.orderNo WHERE m.orderNo=#{orderNo}
+  </select>-->
+
+  <!--保存物流信息-->
+  <update id="AddLogistics" parameterType="com.dlc.modules.api.entity.MyOrder">
+    UPDATE my_order set logisticsNo=#{logisticsNo},logisticsName=#{logisticsName}
+     ,company=#{company} WHERE producer=#{producer} AND orderNo=#{orderNo}
+  </update>
+
+  <!--修改订单状态-->
+  <update id="ChangeOrderStatusByOrderNo">
+    UPDATE my_order
+    <set >
+    <if test="status != null" >
+      status = #{status},
+    </if>
+    <if test="deliveryTime != null" >
+      deliveryTime = #{deliveryTime}
+    </if>
+    </set>
+    WHERE orderNo = #{orderNo}
+  </update>
+
+  <!--添加订单详情-->
+<insert id="addOrderDetails" parameterType="com.dlc.modules.api.entity.OrderDetail">
+  INSERT INTO order_detail (orderNo,goodsId,imgUrl,goodsNum,goodsName,goodsPrice,categoryId)
+  VALUES
+  (#{orderNo},#{goodsId},#{imgUrl},#{goodsNum},#{goodsName},#{goodsPrice},#{categoryId})
+
+</insert>
+
+<insert id="AddMyOrder" parameterType="com.dlc.modules.api.entity.MyOrder">
+  insert into my_order
+  <trim prefix="(" suffix=")" suffixOverrides="," >
+    <if test="id != null" >
+      id,
+    </if>
+    <if test="producer != null" >
+      producer,
+    </if>
+    <if test="customer != null" >
+      customer,
+    </if>
+    <if test="orderNo != null" >
+      orderNo,
+    </if>
+    <if test="addrId != null" >
+      addrId,
+    </if>
+    <if test="orderNum != null" >
+      orderNum,
+    </if>
+    <if test="transactionNo != null" >
+      transactionNo,
+    </if>
+    <if test="goodsSum != null" >
+      goodsSum,
+    </if>
+    <if test="realPayment != null" >
+      realPayment,
+    </if>
+    <if test="logisticsNo != null" >
+      logisticsNo,
+    </if>
+    <if test="logisticsName != null" >
+      logisticsName,
+    </if>
+    <if test="status != null" >
+      status,
+    </if>
+    <if test="payTime != null" >
+      payTime,
+    </if>
+    <if test="deliveryTime != null" >
+      deliveryTime,
+    </if>
+    <if test="tradeTime != null" >
+      tradeTime,
+    </if>
+    <if test="createTime != null" >
+      createTime,
+    </if>
+    <if test="imgUrl != null" >
+      imgUrl,
+    </if>
+    <if test="goodsId != null" >
+      goodsId,
+    </if>
+    <if test="openId != null" >
+      openId,
+    </if>
+  </trim>
+  <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="id != null" >
+      #{id,jdbcType=BIGINT},
+    </if>
+    <if test="producer != null" >
+      #{producer,jdbcType=BIGINT},
+    </if>
+    <if test="customer != null" >
+      #{customer,jdbcType=BIGINT},
+    </if>
+    <if test="orderNo != null" >
+      #{orderNo,jdbcType=VARCHAR},
+    </if>
+    <if test="addrId != null" >
+      #{addrId,jdbcType=BIGINT},
+    </if>
+    <if test="orderNum != null" >
+      #{orderNum,jdbcType=INTEGER},
+    </if>
+    <if test="transactionNo != null" >
+      #{transactionNo,jdbcType=VARCHAR},
+    </if>
+    <if test="goodsSum != null" >
+      #{goodsSum,jdbcType=INTEGER},
+    </if>
+    <if test="realPayment != null" >
+      #{realPayment,jdbcType=INTEGER},
+    </if>
+    <if test="logisticsNo != null" >
+      #{logisticsNo,jdbcType=VARCHAR},
+    </if>
+    <if test="logisticsName != null" >
+      #{logisticsName,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null" >
+      #{status,jdbcType=TINYINT},
+    </if>
+    <if test="payTime != null" >
+      #{payTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="deliveryTime != null" >
+      #{deliveryTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="tradeTime != null" >
+      #{tradeTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="createTime != null" >
+      #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="imgUrl != null" >
+      #{imgUrl,jdbcType=VARCHAR},
+    </if>
+    <if test="goodsId != null" >
+      #{goodsId,jdbcType=BIGINT},
+    </if>
+    <if test="openId != null" >
+      #{openId,jdbcType=VARCHAR},
+    </if>
+  </trim>
+</insert>
+
+  <!--管理端：查询我的订单-->
+  <select id="queryList" resultType="map" parameterType="map">
+    select m.status,m.orderNo,o.goodsPrice,m.realPayment,m.deliveryTime,m.tradeTime,c.name,m.orderNum,m.goodsSum,m.logisticsNo,m.transactionNo,m.createTime,m.payTime,
+    o.orderNo,o.categoryId,o.goodsId,o.goodsName,o.goodsNum,o.goodsPrice,o.imgUrl
+    from my_order m LEFT JOIN
+    order_detail o ON m.orderNo=o.orderNo LEFT JOIN
+    goods_category c on c.id=o.categoryId
+    <where>
+      <if test="userId!=null">
+        AND m.customer=#{userId}
+      </if>
+      <if test="status!=null">
+        AND m.status=#{status}
+      </if>
+      <if test="orderNo!=null">
+        AND m.orderNo=#{orderNo}
+      </if>
+    </where>
+    ORDER BY createTime DESC
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="queryOrderInfoById" resultType="map">
+   SELECT
+        cat.`name` as categoryName,a.deliveryTime,a.company,a.payTime,a.tradeTime,a.id,a.producer,a.customer,a.orderNo,a.orderNum,a.transactionNo,a.goodsSum,a.realPayment,a.logisticsNo,a.logisticsName,a.status,b.addressId,b.name,b.phone,b.province,b.addr,
+        b.isDefault,b.userId,c.freight,d.goodsId,d.imgUrl,d.goodsNum,d.goodsName,d.goodsPrice,d.createTime,d.categoryId
+    FROM
+       my_order a
+       LEFT JOIN address b ON a.addrId = b.addressId
+			 LEFT JOIN order_detail d ON d.orderNo = a.orderNo
+			 LEFT JOIN goods c ON d.goodsId= c.id
+			LEFT JOIN goods_category cat on cat.id=d.categoryId
+       WHERE a.orderNo = #{orderNo}
+  </select>
+
+  <!--修改订单状态-->
+  <update id="updateOrderStatus" parameterType="map">
+    UPDATE my_order
+    <set >
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="tradeTime != null" >
+        tradeTime = #{tradeTime}
+      </if>
+    </set>
+    WHERE orderNo = #{orderNo}
+  </update>
+
+  <!--根据订单号查询订单-->
+  <select id="queryOrderInfoByOrderNo" parameterType="java.lang.String" resultType="map">
+    select m.orderNo,m.transactionNo AS transactionNumber,producer,goodsSum,realPayment,o.goodsId,(goodsPrice*goodsNum)+g.freight AS money,g.userId from my_order m
+    LEFT JOIN order_detail o ON o.orderNo = m.orderNo
+    LEFT JOIN goods g ON g.id = o.goodsId
+    where o.orderNo=#{out_trade_no}
+  </select>
+
+<!--总记录条数-->
+  <select id="queryMyOrderListCount" parameterType="map" resultType="java.lang.Integer">
+    select COUNT(1) from my_order m INNER JOIN
+    goods g on m.producer=g.userId INNER JOIN
+    goods_category c on c.id=g.categoryId and
+    g.userId=#{userId}
+    WHERE m.status=#{status}
+    AND orderNo=#{orderNo}
+    AND deleteStatus=0
+  </select>
+
+  <!--总记录条数-->
+  <select id="queryListCount" parameterType="map" resultType="java.lang.Integer">
+    select COUNT(1) from my_order m INNER JOIN
+    goods g on m.producer=g.userId INNER JOIN
+    goods_category c on c.id=g.categoryId and
+    g.userId=#{userId}
+    WHERE m.status=#{status}
+    AND orderNo=#{orderNo}
+    AND deleteStatus=0
+  </select>
+
+  <!--修改订单-->
+  <update id="editOrder" parameterType="com.dlc.modules.api.entity.MyOrder">
+    UPDATE my_order
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="logisticsNo != null">
+        logisticsNo=#{logisticsNo},
+      </if>
+      <if test="logisticsName != null">
+        logisticsName=#{logisticsName},
+      </if>
+      <if test="transactionNo != null">
+        transactionNo=#{transactionNo},
+      </if>
+      <if test="payTime != null">
+        payTime=#{payTime},
+      </if>
+      <if test="deliveryTime != null">
+        deliveryTime=#{deliveryTime},
+      </if>
+      <if test="tradeTime != null">
+        tradeTime=#{tradeTime},
+      </if>
+      <if test="status != null">
+        status=#{status},
+      </if>
+    </trim>
+    where orderNo=#{orderNo}
+  </update>
+
+  <!--根据商品I的编辑商品内容-->
+  <update id="editGoodsById" parameterType="com.dlc.modules.api.entity.Goods">
+    UPDATE goods
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="categoryId != null">
+        categoryId=#{categoryId},
+      </if>
+      <if test="name != null">
+        name=#{name},
+      </if>
+      <if test="price != null">
+        price=#{price},
+      </if>
+      <if test="monthlySales != null">
+        monthlySales=#{monthlySales},
+      </if>
+      <if test="imgUrl != null">
+        imgUrl=#{imgUrl},
+      </if>
+      <if test="status != null">
+        status=#{status},
+      </if>
+      <if test="freight != null">
+        freight=#{freight},
+      </if>
+      <if test="remark != null">
+        remark=#{remark},
+      </if>
+      <if test="carouselImgUrl != null">
+        carouselImgUrl=#{carouselImgUrl},
+      </if>
+      <if test="remarkImgUrl != null">
+        remarkImgUrl=#{remarkImgUrl},
+      </if>
+      <if test="deleteStatus != null">
+        deleteStatus=#{deleteStatus},
+      </if>
+    </trim>
+    WHERE id=#{id} AND userId=#{userId}
+  </update>
+
+  <!--删除购物车-->
+  <delete id="delShoppingCarById">
+    DELETE FROM shopping_car WHERE goodsId=#{goodsId} AND userId=#{customer}
+  </delete>
+
+  <!--支付成功，更改订单状态为待发货-->
+  <update id="upOrdreStatus">
+    UPDATE my_order
+    SET
+    status=1,payTime=NOW(),transactionNo=#{transactionNumber} WHERE orderNo=#{orderNo}
+  </update>
+</mapper>

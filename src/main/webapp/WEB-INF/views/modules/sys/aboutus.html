@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>关于我们</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <#if shiro.hasPermission("sys:aboutus:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+            <#if shiro.hasPermission("sys:aboutus:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+            <#if shiro.hasPermission("sys:aboutus:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">app图标</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.appImgUrl" placeholder="app图标"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">app名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.appName" placeholder="app名称"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">客户电话</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.serviceTel" placeholder="客户电话"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">版本号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.version" placeholder="版本号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">公司中文名</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.companyNameCHN" placeholder="公司中文名"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">公司英文名</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.companyNameENG" placeholder="公司英文名"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="aboutUs.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/aboutus.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+</body>
+</html>

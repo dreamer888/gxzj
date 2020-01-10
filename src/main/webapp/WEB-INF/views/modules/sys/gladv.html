@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>个联广告</title>
+    <#include "/header.html">
+        <style>
+            .logo {
+                display: inline-block;
+                text-align: center;
+                margin-right: 15px;
+            }
+            .logo .logo_img{
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+            .upload {
+                margin: 5px 0 15px 0px;
+            }
+        </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name"   @keyup.enter="query" placeholder="请输入个联广告标题">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+
+            <#if shiro.hasPermission("sys:gladv:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+
+            <#if shiro.hasPermission("sys:gladv:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+
+            <#if shiro.hasPermission("sys:gladv:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" ><!--style="width: 80%;" id="ueditorForm" action="" method="post" enctype="multipart/form-data"-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告标题</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="gladv.name" placeholder="广告标题"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告内容</div>
+                <div class="col-sm-10">
+                    <!--<input type="text" class="form-control" v-model="gladv.content" placeholder="广告内容"/>-->
+                    <textarea rows="6" cols="50" v-model="gladv.content" placeholder="请填写广告内容"></textarea>
+                </div>
+            </div>
+
+            <div id="images" class="">
+                <div class="col-sm-2 control-label">广告图</div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告链接地址</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="gladv.linkUrl" placeholder="广告链接地址"/>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group" >
+                <div class="col-sm-2 control-label">广告上/下架</div>
+                <div class="form-group col-sm-10">
+                    <select class="form-control" v-model="gladv.status">
+                        <option value="0" >下架</option>
+                        <option value="1" >上架</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">排序</div>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" v-model="gladv.sort" placeholder="排序"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/gladv.js?_${.now?long}"></script>
+
+</body>
+</html>

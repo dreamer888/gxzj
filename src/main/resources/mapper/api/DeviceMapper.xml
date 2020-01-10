@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.DeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Device" >
+    <constructor >
+      <idArg column="deviceId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="imei" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressDetail" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="proxyId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="inventory" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="goodsName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="goodsPrice" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dlc.modules.api.entity.Device" >
+    <constructor >
+      <idArg column="deviceId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="imei" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressDetail" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="proxyId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="inventory" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="goodsName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="goodsPrice" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="goodsImgUrl" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    deviceId, deviceNo, imei, addressDetail, addressId, proxyId, status, inventory, goodsName, 
+    goodsPrice, price, createTime
+  </sql>
+  <sql id="Blob_Column_List" >
+    goodsImgUrl
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from device
+    where deviceId = #{deviceId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from device
+    where deviceId = #{deviceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Device" >
+    insert into device (deviceId, deviceNo, imei, 
+      addressDetail, addressId, proxyId, 
+      status, inventory, goodsName, 
+      goodsPrice, price, createTime, 
+      goodsImgUrl)
+    values (#{deviceId,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{addressId,jdbcType=BIGINT}, #{proxyId,jdbcType=BIGINT}, 
+      #{status,jdbcType=TINYINT}, #{inventory,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR}, 
+      #{goodsPrice,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{goodsImgUrl,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.Device" >
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="deviceId != null" >
+        deviceId,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="addressDetail != null" >
+        addressDetail,
+      </if>
+      <if test="addressId != null" >
+        addressId,
+      </if>
+      <if test="proxyId != null" >
+        proxyId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="inventory != null" >
+        inventory,
+      </if>
+      <if test="goodsName != null" >
+        goodsName,
+      </if>
+      <if test="goodsPrice != null" >
+        goodsPrice,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="goodsImgUrl != null" >
+        goodsImgUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="addressId != null" >
+        #{addressId,jdbcType=BIGINT},
+      </if>
+      <if test="proxyId != null" >
+        #{proxyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="inventory != null" >
+        #{inventory,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null" >
+        #{goodsPrice,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsImgUrl != null" >
+        #{goodsImgUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Device" >
+    update device
+    <set >
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        addressDetail = #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="addressId != null" >
+        addressId = #{addressId,jdbcType=BIGINT},
+      </if>
+      <if test="proxyId != null" >
+        proxyId = #{proxyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="inventory != null" >
+        inventory = #{inventory,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null" >
+        goodsPrice = #{goodsPrice,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+        <if test="onLineTime != null" >
+            onLineTime = #{onLineTime,jdbcType=TIMESTAMP},
+        </if>
+      <if test="goodsImgUrl != null" >
+        goodsImgUrl = #{goodsImgUrl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where deviceId = #{deviceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dlc.modules.api.entity.Device" >
+    update device
+    set deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      addressDetail = #{addressDetail,jdbcType=VARCHAR},
+      addressId = #{addressId,jdbcType=BIGINT},
+      proxyId = #{proxyId,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT},
+      inventory = #{inventory,jdbcType=INTEGER},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      goodsPrice = #{goodsPrice,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      goodsImgUrl = #{goodsImgUrl,jdbcType=LONGVARCHAR}
+    where deviceId = #{deviceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Device" >
+    update device
+    set deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      addressDetail = #{addressDetail,jdbcType=VARCHAR},
+      addressId = #{addressId,jdbcType=BIGINT},
+      proxyId = #{proxyId,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT},
+      inventory = #{inventory,jdbcType=INTEGER},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      goodsPrice = #{goodsPrice,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where deviceId = #{deviceId,jdbcType=BIGINT}
+  </update>
+    <select id="queryDeviceGoods" parameterType="String" resultType="map">
+        SELECT goodsName,goodsPrice,goodsImgUrl,inventory
+        FROM device
+        WHERE deviceNo = #{deviceNo}
+    </select>
+
+    <update id="updateGoodsInfoByNo" parameterType="map">
+        UPDATE device
+        <set>
+      <if test="inventory != null" >
+        inventory =#{inventory},
+      </if>
+      <if test="addressDetail != null" >
+        addressDetail =#{addressDetail},
+      </if>
+        </set>
+        WHERE deviceNo = #{deviceNo}
+    </update>
+
+  <select id="queryList" resultType="java.util.HashMap" >
+    select
+    a1.deviceNo,a1.inventory,a1.goodsImgUrl,a1.addressDetail,a1.price,a1.goodsPrice,a1.imei,a1.goodsName,a1.status,a1.deviceId,
+    agent.name agentName,ops.name opsName,a2.opsPhone,a2.createTime,a2.opsId
+    from device a1
+    LEFT JOIN agent_device_relation a2 on a1.deviceNo = a2.deviceNo
+    LEFT JOIN agent agent on agent.id = a2.agentId
+    LEFT JOIN agent ops on ops.id = a2.opsId
+    <where>
+
+      <if test="status != null" >
+        and a1.status = #{status}
+      </if>
+      <if test="agentId != null" >
+        and a2.agentId = #{agentId}
+      </if>
+      <if test="opsId != null" >
+        and a2.opsId = #{opsId}
+      </if>
+      <if test="deviceNo != null" >
+        and a2.deviceNo = #{deviceNo}
+      </if>
+    </where>
+  </select>
+
+  <select id="checkOnline" resultType="map">
+    SELECT a.deviceNo,a.addressDetail addr
+    from device a
+    where
+    (unix_timestamp(now())-unix_timestamp(a.onLineTime)) &gt; #{min} and a.status = 1
+  </select>
+
+  <select id="queryDeviceDetail" resultType="java.util.HashMap" >
+    select
+    a1.*
+    from device a1
+    <where>
+      <if test="deviceNo != null" >
+        and a1.deviceNo = #{deviceNo}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryObjectByDeviceNoAndImei" resultType="com.dlc.modules.api.entity.Device" >
+    select
+    *
+    from device
+    <where>
+      deviceNo = #{deviceNo} and imei = #{imei}
+    </where>
+  </select>
+
+  <update id="offline" parameterType="java.util.List" >
+    update device set status = 2
+    where deviceNo IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+
+    <select id="findDeviceAddrByImei" resultType="map" parameterType="java.lang.String">
+        SELECT deviceId,status,addressDetail FROM device WHERE imei = #{imei}
+    </select>
+
+    <select id="queryOfficialDeviceList" parameterType="map" resultType="map">
+        SELECT deviceNo,addr
+        FROM  agent_device_relation
+        <where>
+            <!--管理人员类型-->
+          <if test="type ==2">
+             AND agentId = #{agentId}
+          </if>
+            <!--运维人员类型-->
+          <if test="type ==3">
+             AND opsId = #{agentId}
+          </if>
+
+        </where>
+    </select>
+
+    <select id="queryDeviceAddress" parameterType="string" resultType="string">
+        select addressDetail from device
+        WHERE deviceNo = #{deviceNo}
+    </select>
+
+    <select id="queryDeviceStatus" parameterType="String" resultType="int">
+        SELECT status
+        FROM device
+        WHERE deviceNo = #{deviceNo}
+    </select>
+
+</mapper>

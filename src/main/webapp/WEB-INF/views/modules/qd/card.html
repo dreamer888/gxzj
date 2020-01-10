@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a v-if="hasPermission('qd:card:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('qd:card:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('qd:card:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">名片所属公司id</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.enterpriseId" placeholder="名片所属公司id"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">名片所属用户id</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.accountId" placeholder="名片所属用户id"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">姓名</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.name" placeholder="姓名"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">职位</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.position" placeholder="职位"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">公司名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.companyName" placeholder="公司名称"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">省</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.province" placeholder="省"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">市</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.city" placeholder="市"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">区</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.area" placeholder="区"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">营业地址</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.address" placeholder="营业地址"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">联系方式</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.tel" placeholder="联系方式"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">邮箱</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.mail" placeholder="邮箱"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">个人简介</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.introduce" placeholder="个人简介"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="card.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../../js/modules/qd/card.js"></script>
+</body>
+</html>

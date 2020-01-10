@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a v-if="hasPermission('qd:relational:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('qd:relational:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('qd:relational:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">主关系id</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.primaryRelation" placeholder="主关系id"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">从关系id</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.subordinateRelation" placeholder="从关系id"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">从关系所属标签</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.label" placeholder="从关系所属标签"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">从关系是否是主关系的黑名单  1是 ， 2否</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.blacklist" placeholder="从关系是否是主关系的黑名单  1是 ， 2否"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">主账号对从账号的备注</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.remarks" placeholder="主账号对从账号的备注"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">主对从关系的朋友圈权限，1开启(默认1) 2关闭</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.primaryJurisdiction" placeholder="主对从关系的朋友圈权限，1开启(默认1) 2关闭"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">不看从关系的朋友圈 1开启 2关闭</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.subordinateJurisdiction" placeholder="不看从关系的朋友圈 1开启 2关闭"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">备注手机号码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.phoneNumber" placeholder="备注手机号码"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">描述</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.describe" placeholder="描述"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">附加图片</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="relational.imgUrl" placeholder="附加图片"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../../js/modules/qd/relational.js"></script>
+</body>
+</html>

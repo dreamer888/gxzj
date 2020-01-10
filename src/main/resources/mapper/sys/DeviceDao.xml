@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.DeviceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.DeviceEntity" id="deviceMap">
+        <result property="deviceId" column="deviceId"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="imei" column="imei"/>
+        <result property="addressDetail" column="addressDetail"/>
+        <result property="addressId" column="addressId"/>
+        <result property="proxyId" column="proxyId"/>
+        <result property="status" column="status"/>
+        <result property="inventory" column="inventory"/>
+        <result property="goodsImgUrl" column="goodsImgUrl"/>
+        <result property="goodsName" column="goodsName"/>
+        <result property="goodsPrice" column="goodsPrice"/>
+        <result property="price" column="price"/>
+        <result property="createTime" column="createTime"/>
+		<result property="agentId" column="agentId"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.DeviceEntity">
+		select * from device where deviceId = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.DeviceEntity">
+		select * from device
+	</select>
+	<!--<select id="queryList" resultType="com.dlc.modules.sys.entity.DeviceEntity">-->
+		<!--select * from device-->
+    <!--</select>-->
+	<select id="queryListMapByMap" resultType="map">
+		select a1.*,a2.name,a2.agentId from device a1
+		LEFT JOIN
+		(SELECT b1.deviceNo,b1.agentId,b2.name FROM agent_device_relation b1,agent b2  where b1.agentId = b2.id) a2
+		on a1.deviceNo = a2.deviceNo
+		<where>
+			<if test="deviceId != null" >
+				a1.deviceId = #{deviceId}
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by deviceId desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from device 
+	</select>
+	 
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.DeviceEntity" useGeneratedKeys="true" keyProperty="deviceId">
+		insert into device
+		(
+			`deviceNo`, 
+			`imei`, 
+			`addressDetail`, 
+			`addressId`, 
+			`proxyId`, 
+			`status`, 
+			`inventory`, 
+			`goodsImgUrl`, 
+			`goodsName`, 
+			`goodsPrice`, 
+			`price`, 
+			`createTime`
+		)
+		values
+		(
+			#{deviceNo}, 
+			#{imei}, 
+			#{addressDetail}, 
+			#{addressId}, 
+			#{proxyId}, 
+			#{status},
+			#{inventory}, 
+			#{goodsImgUrl}, 
+			#{goodsName}, 
+			#{goodsPrice}, 
+			#{price}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.DeviceEntity">
+		update device 
+		<set>
+			<if test="deviceNo != null">`deviceNo` = #{deviceNo}, </if>
+			<if test="imei != null">`imei` = #{imei}, </if>
+			<if test="addressDetail != null">`addressDetail` = #{addressDetail}, </if>
+			<if test="addressId != null">`addressId` = #{addressId}, </if>
+			<if test="proxyId != null">`proxyId` = #{proxyId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="inventory != null">`inventory` = #{inventory}, </if>
+			<if test="goodsImgUrl != null">`goodsImgUrl` = #{goodsImgUrl}, </if>
+			<if test="goodsName != null">`goodsName` = #{goodsName}, </if>
+			<if test="goodsPrice != null">`goodsPrice` = #{goodsPrice}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="createTime != null">`createTime` = #{createTime}</if>
+		</set>
+		where deviceId = #{deviceId}
+	</update>
+
+	<select id="queryPrice" resultType="com.dlc.modules.sys.entity.DeviceEntity">
+		select deviceId,goodsPrice from device WHERE imei = #{imei}
+	</select>
+
+	<delete id="delete">
+		delete from device where deviceId = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from device where deviceId in 
+		<foreach item="deviceId" collection="array" open="(" separator="," close=")">
+			#{deviceId}
+		</foreach>
+	</delete>
+
+    <select id="queryDeviceNoById" parameterType="Long" resultType="map">
+        SELECT deviceNo,imei
+        FROM device
+        WHERE deviceId = #{id}
+    </select>
+
+	<select id="getRelationInfo"  resultType="com.dlc.modules.sys.entity.AgentDeviceRelationEntity">
+		SELECT *
+		FROM agent_device_relation
+		WHERE deviceNo = #{deviceNo}
+	</select>
+
+	<select id="getDeviceByNo"  resultType="com.dlc.modules.sys.entity.DeviceEntity">
+		SELECT *
+		FROM device
+		WHERE deviceNo = #{deviceNo}
+	</select>
+
+	<insert id="saveRelationInfo" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+		insert into agent_device_relation
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				id,
+			</if>
+			<if test="agentId != null" >
+				agentId,
+			</if>
+			<if test="opsId != null" >
+				opsId,
+			</if>
+			<if test="deviceNo != null" >
+				deviceNo,
+			</if>
+			<if test="deviceImei != null" >
+				deviceImei,
+			</if>
+			<if test="inventory != null" >
+				inventory,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="opsPhone != null" >
+				opsPhone,
+			</if>
+			<if test="addr != null" >
+				addr,
+			</if>
+			<if test="freePaperTotal != null" >
+				freePaperTotal,
+			</if>
+			<if test="payPaperTotal != null" >
+				payPaperTotal,
+			</if>
+			<if test="gzhLikeTotal != null" >
+				gzhLikeTotal,
+			</if>
+			<if test="gzhIncomeSum != null" >
+				gzhIncomeSum,
+			</if>
+			<if test="payPaperSum != null" >
+				payPaperSum,
+			</if>
+			<if test="commissionSum != null" >
+				commissionSum,
+			</if>
+			<if test="createTime != null" >
+				createTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="agentId != null" >
+				#{agentId,jdbcType=BIGINT},
+			</if>
+			<if test="opsId != null" >
+				#{opsId,jdbcType=BIGINT},
+			</if>
+			<if test="deviceNo != null" >
+				#{deviceNo,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceImei != null" >
+				#{deviceImei,jdbcType=VARCHAR},
+			</if>
+			<if test="inventory != null" >
+				#{inventory,jdbcType=INTEGER},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="opsPhone != null" >
+				#{opsPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="addr != null" >
+				#{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="freePaperTotal != null" >
+				#{freePaperTotal,jdbcType=INTEGER},
+			</if>
+			<if test="payPaperTotal != null" >
+				#{payPaperTotal,jdbcType=INTEGER},
+			</if>
+			<if test="gzhLikeTotal != null" >
+				#{gzhLikeTotal,jdbcType=INTEGER},
+			</if>
+			<if test="gzhIncomeSum != null" >
+				#{gzhIncomeSum,jdbcType=INTEGER},
+			</if>
+			<if test="payPaperSum != null" >
+				#{payPaperSum,jdbcType=INTEGER},
+			</if>
+			<if test="commissionSum != null" >
+				#{commissionSum,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="modifyRelationInfo" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+		update agent_device_relation
+		<set >
+			<if test="agentId != null" >
+				agentId = #{agentId,jdbcType=BIGINT},
+			</if>
+			<if test="opsId != null" >
+				opsId = #{opsId,jdbcType=BIGINT},
+			</if>
+			<if test="deviceNo != null" >
+				deviceNo = #{deviceNo,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceImei != null" >
+				deviceImei = #{deviceImei,jdbcType=VARCHAR},
+			</if>
+			<if test="inventory != null" >
+				inventory = #{inventory,jdbcType=INTEGER},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="opsPhone != null" >
+				opsPhone = #{opsPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="addr != null" >
+				addr = #{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="freePaperTotal != null" >
+				freePaperTotal = #{freePaperTotal,jdbcType=INTEGER},
+			</if>
+			<if test="payPaperTotal != null" >
+				payPaperTotal = #{payPaperTotal,jdbcType=INTEGER},
+			</if>
+			<if test="gzhLikeTotal != null" >
+				gzhLikeTotal = #{gzhLikeTotal,jdbcType=INTEGER},
+			</if>
+			<if test="gzhIncomeSum != null" >
+				gzhIncomeSum = #{gzhIncomeSum,jdbcType=INTEGER},
+			</if>
+			<if test="payPaperSum != null" >
+				payPaperSum = #{payPaperSum,jdbcType=INTEGER},
+			</if>
+			<if test="commissionSum != null" >
+				commissionSum = #{commissionSum,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null" >
+				createTime = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateGoodsInfoByNo" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation">
+		UPDATE device
+		SET inventory =#{inventory}
+		WHERE deviceNo = #{deviceNo}
+	</update>
+
+	<select id="select" resultType="map">
+		select
+		deviceNo,deviceId
+		from device
+	</select>
+
+	<!-- 导出excel -->
+	<select id="exportExcel" resultType="map" parameterType="java.lang.Integer">
+		select a1.deviceNo,a1.imei,a2.name,a1.addressDetail,a1.`status`,a1.inventory,a1.goodsName,a1.goodsPrice,a1.createTime from device a1
+		LEFT JOIN
+		(SELECT b1.deviceNo,b1.agentId,b2.name FROM agent_device_relation b1,agent b2  where b1.agentId = b2.id) a2
+		on a1.deviceNo = a2.deviceNo
+	</select>
+
+
+	<!-- 批量导入 -->
+	<insert id="saveBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		insert into device
+		(
+		`deviceNo`,
+		`imei`,
+		`addressDetail`,
+		`status`,
+		`inventory`,
+		`goodsName`,
+		`goodsPrice`,
+		`createTime`
+		)
+		values
+		<foreach collection="list" index="index" item="item" separator=",">
+			(#{item.deviceNo},
+			#{item.imei},
+			#{item.addressDetail},
+			1,
+			#{item.inventory},
+			#{item.goodsName},
+			#{item.goodsPrice},
+			#{item.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<!-- 根据条件查询 -->
+	<select id="queryByCondition" parameterType="com.dlc.modules.sys.entity.DeviceEntity" resultType="map">
+		SELECT * FROM device
+		<where>
+			<if test="deviceNo != null and deviceNo.trim() != ''">
+				AND deviceNo = #{deviceNo}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据条件查询 -->
+	<select id="queryByImeiCondition" parameterType="com.dlc.modules.sys.entity.DeviceEntity" resultType="map">
+		SELECT * FROM device
+		<where>
+			<if test="imei != null and imei.trim() != ''">
+				AND imei = #{imei}
+			</if>
+		</where>
+	</select>
+
+</mapper>

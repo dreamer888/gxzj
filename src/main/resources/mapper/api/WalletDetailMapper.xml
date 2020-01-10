@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.WalletDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.WalletDetail" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="money" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="transactionNumber" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="reason" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="orderNo" jdbcType="VARCHAR" javaType="java.lang.Integer" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dlc.modules.api.entity.WalletDetail" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="money" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="transactionNumber" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="reason" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="orderNo" jdbcType="VARCHAR" javaType="java.lang.Integer" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="wxCount" jdbcType="VARBINARY" javaType="_byte[]" />
+    </constructor>
+  </resultMap>
+  <!--钱包明细详情-->
+  <select id="queryWdInfo" resultType="map" parameterType="java.lang.Long">
+    SELECT id,type,money,orderNo,wxCount,reason,status,createTime FROM wallet_detail WHERE id = #{id}
+  </select>
+  <!--查询广告主钱包列表明细-->
+  <select id="selectAdWdListByType" resultType="map" parameterType="map">
+    SELECT id,type,money,createTime,status
+    FROM wallet_detail
+    WHERE userId = #{userId} AND status != 6 AND (type = 3 OR type = 4)
+    ORDER BY createTime DESC
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <!--查询广告主钱包列表明细-->
+  <select id="queryAdvTotal" resultType="java.lang.Integer" parameterType="map">
+    SELECT count(*) FROM wallet_detail
+    WHERE userId = #{userId} AND status != 6 AND (type = 3 OR type = 4)
+  </select>
+  <!--查询供货主或者代理商钱包列表明细-->
+  <select id="selectDlWdListByType" resultType="map" parameterType="map">
+    SELECT id,type,money,createTime,status
+    FROM wallet_detail
+    WHERE userId = #{userId} AND (type = 1 OR type = 2)
+    ORDER BY createTime DESC
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <select id="queryDlTotal" resultType="java.lang.Integer" parameterType="map">
+    SELECT count(*) FROM wallet_detail
+    WHERE userId = #{userId} AND (type = 1 OR type = 2)
+  </select>
+
+  <!--钱包明细列表查询(提现，销售收入，充值，广告消费)-->
+  <select id="wdList" resultType="map" parameterType="map">
+    SELECT id,type,money,createTime,status
+    FROM wallet_detail
+    <where>
+      <if test="type != null and type != ''">
+        AND type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null and userId !=''">
+        AND userId = #{userId}
+      </if>
+    </where>
+    ORDER BY createTime DESC
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <!--列表条数统计-->
+  <select id="queryTotal" resultType="java.lang.Integer" parameterType="map">
+    SELECT count(*) FROM wallet_detail
+    <where>
+      <if test="type != null and type != ''">
+        AND type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null and userId !=''">
+        AND userId = #{userId}
+      </if>
+    </where>
+  </select>
+  <!--根据orderNo查询walletDetail-->
+  <select id="selectByOrderNo" resultType="com.dlc.modules.api.entity.WalletDetail" parameterType="java.lang.String">
+    SELECT id,userId FROM wallet_detail WHERE orderNo = #{orderNo}
+  </select>
+
+  <sql id="Base_Column_List" >
+    id, userId, type, money, transactionNumber, reason, status, createTime, orderNo, openId
+  </sql>
+  <sql id="Blob_Column_List" >
+    wxCount
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wallet_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wallet_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.WalletDetail" >
+    insert into wallet_detail (id, userId, type, 
+      money, transactionNumber, reason, 
+      status, orderNo,openId,createTime, wxCount
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
+      #{money,jdbcType=INTEGER}, #{transactionNumber,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR},
+      #{openId,jdbcType=VARCHAR},#{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{wxCount,jdbcType=VARBINARY}
+      )
+  </insert>
+  <!--充值订单-->
+  <insert id="creatRcharge" parameterType="com.dlc.modules.api.entity.WalletDetail">
+     insert into wallet_detail (id, userId, type,
+      money, transactionNumber, reason,orderNo,openId,
+      status, createTime, wxCount
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
+      #{money,jdbcType=INTEGER}, #{transactionNumber,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR},
+      #{orderNo,jdbcType=VARCHAR},#{openId,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{wxCount,jdbcType=VARBINARY}
+      )
+  </insert>
+  <!--回调时查询充值订单-->
+  <select id="findWdByOrderNo" resultType="com.dlc.modules.api.entity.WalletDetail" parameterType="java.lang.String">
+    SELECT id,userId FROM wallet_detail WHERE orderNo = #{orderNo}
+  </select>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.WalletDetail">
+    insert into wallet_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="transactionNumber != null" >
+        transactionNumber,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="orderNo != null" >
+        orderNo,
+      </if>
+      <if test="openId != null" >
+        openId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="wxCount != null" >
+        wxCount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="transactionNumber != null" >
+        #{transactionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxCount != null" >
+        #{wxCount,jdbcType=VARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.WalletDetail" >
+    update wallet_detail
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="transactionNumber != null" >
+        transactionNumber = #{transactionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        orderNo = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        openId = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wxCount != null" >
+        wxCount = #{wxCount,jdbcType=VARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dlc.modules.api.entity.WalletDetail" >
+    update wallet_detail
+    set userId = #{userId,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      transactionNumber = #{transactionNumber,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      orderNo = #{orderNo,jdbcType=VARCHAR},
+      openId = #{openId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      wxCount = #{wxCount,jdbcType=VARBINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.WalletDetail" >
+    update wallet_detail
+    set userId = #{userId,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      transactionNumber = #{transactionNumber,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      orderNo = #{orderNo,jdbcType=VARCHAR},
+      openId = #{openId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--增加余额(增加供货端余额)-->
+  <update id="addBalance" parameterType="map">
+    UPDATE agent SET wallet=#{realPayment}+wallet WHERE id=${producer} AND type=1 AND status=1
+  </update>
+
+  <!--减少余额-->
+  <update id="cutDownBalance">
+    UPDATE agent SET wallet=wallet-#{realPayment} WHERE id=#{customer}
+  </update>
+
+  <!--查询用户余额-->
+  <select id="selectMoney" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    SELECT wallet from agent WHERE id=#{customer}
+  </select>
+
+  <!--个联钱包明细-->
+  <insert id="addMsgToglWallet">
+    INSERT INTO gl_wallet_detail (type,money)
+    VALUES (3,#{money})
+  </insert>
+
+  <!--钱包明细增加一条记录-->
+  <insert id="addWalletDetail" parameterType="map">
+    INSERT INTO wallet_detail
+    (userId,type,money,transactionNumber,orderNo,openId,createTime,status)
+    VALUES
+    (${producer},2,#{money},#{transactionNumber},#{orderNo},#{openId},NOW(),3)
+  </insert>
+
+  <!--个联钱包修改金额-->
+  <update id="editMsgToglWallet">
+    UPDATE gl_wallet SET balance=#{money}+balance
+  </update>
+
+  <!--供货端增加余额（微信支付）-->
+  <update id="addMoneyById2" parameterType="map">
+    UPDATE agent SET wallet=#{money}+wallet WHERE id=#{producer} AND type=1 AND status=1
+  </update>
+
+  <!--查询订单数量和商品Id-->
+  <select id="queryOrderDetailByOderNo" resultType="com.dlc.modules.api.entity.OrderDetail">
+    SELECT goodsId,goodsNum FROM order_detail WHERE orderNo = #{out_trade_no}
+  </select>
+
+  <!--月销量增加-->
+  <update id="addMonthlySales" parameterType="map">
+    UPDATE goods SET monthlySales=#{monthlySales}+monthlySales WHERE id=#{id} AND status=1
+  </update>
+</mapper>

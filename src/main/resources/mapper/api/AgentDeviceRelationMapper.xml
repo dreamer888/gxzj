@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.AgentDeviceRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="agentId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="opsId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="deviceImei" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="inventory" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="opsPhone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addr" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="freePaperTotal" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="payPaperTotal" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="gzhLikeTotal" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="gzhIncomeSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="payPaperSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="commissionSum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, agentId, opsId, deviceNo, deviceImei, inventory, status, opsPhone, addr, freePaperTotal, 
+    payPaperTotal, gzhLikeTotal, gzhIncomeSum, payPaperSum, commissionSum, createTime
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from agent_device_relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="queryObjectByAgentIdAndDeviceNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from agent_device_relation
+    where agentId = #{agentId} and deviceNo = #{deviceNo}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from agent_device_relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteRByAgentAndDevice" >
+    delete from agent_device_relation
+    where deviceNo = #{deviceNo} and agentId = #{agentId}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    insert into agent_device_relation (id, agentId, opsId, 
+      deviceNo, deviceImei, inventory, 
+      status, opsPhone, addr, 
+      freePaperTotal, payPaperTotal, gzhLikeTotal, 
+      gzhIncomeSum, payPaperSum, commissionSum, 
+      createTime)
+    values (#{id,jdbcType=BIGINT}, #{agentId,jdbcType=BIGINT}, #{opsId,jdbcType=BIGINT}, 
+      #{deviceNo,jdbcType=VARCHAR}, #{deviceImei,jdbcType=VARCHAR}, #{inventory,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{opsPhone,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, 
+      #{freePaperTotal,jdbcType=INTEGER}, #{payPaperTotal,jdbcType=INTEGER}, #{gzhLikeTotal,jdbcType=INTEGER}, 
+      #{gzhIncomeSum,jdbcType=INTEGER}, #{payPaperSum,jdbcType=INTEGER}, #{commissionSum,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    insert into agent_device_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agentId != null" >
+        agentId,
+      </if>
+      <if test="opsId != null" >
+        opsId,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei,
+      </if>
+      <if test="inventory != null" >
+        inventory,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="opsPhone != null" >
+        opsPhone,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="freePaperTotal != null" >
+        freePaperTotal,
+      </if>
+      <if test="payPaperTotal != null" >
+        payPaperTotal,
+      </if>
+      <if test="gzhLikeTotal != null" >
+        gzhLikeTotal,
+      </if>
+      <if test="gzhIncomeSum != null" >
+        gzhIncomeSum,
+      </if>
+      <if test="payPaperSum != null" >
+        payPaperSum,
+      </if>
+      <if test="commissionSum != null" >
+        commissionSum,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="opsId != null" >
+        #{opsId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceImei != null" >
+        #{deviceImei,jdbcType=VARCHAR},
+      </if>
+      <if test="inventory != null" >
+        #{inventory,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="opsPhone != null" >
+        #{opsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="freePaperTotal != null" >
+        #{freePaperTotal,jdbcType=INTEGER},
+      </if>
+      <if test="payPaperTotal != null" >
+        #{payPaperTotal,jdbcType=INTEGER},
+      </if>
+      <if test="gzhLikeTotal != null" >
+        #{gzhLikeTotal,jdbcType=INTEGER},
+      </if>
+      <if test="gzhIncomeSum != null" >
+        #{gzhIncomeSum,jdbcType=INTEGER},
+      </if>
+      <if test="payPaperSum != null" >
+        #{payPaperSum,jdbcType=INTEGER},
+      </if>
+      <if test="commissionSum != null" >
+        #{commissionSum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    update agent_device_relation
+    <set >
+      <if test="agentId != null" >
+        agentId = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="opsId != null" >
+        opsId = #{opsId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceImei != null" >
+        deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      </if>
+      <if test="inventory != null" >
+        inventory = #{inventory,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="opsPhone != null" >
+        opsPhone = #{opsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="freePaperTotal != null" >
+        freePaperTotal = #{freePaperTotal,jdbcType=INTEGER},
+      </if>
+      <if test="payPaperTotal != null" >
+        payPaperTotal = #{payPaperTotal,jdbcType=INTEGER},
+      </if>
+      <if test="gzhLikeTotal != null" >
+        gzhLikeTotal = #{gzhLikeTotal,jdbcType=INTEGER},
+      </if>
+      <if test="gzhIncomeSum != null" >
+        gzhIncomeSum = #{gzhIncomeSum,jdbcType=INTEGER},
+      </if>
+      <if test="payPaperSum != null" >
+        payPaperSum = #{payPaperSum,jdbcType=INTEGER},
+      </if>
+      <if test="commissionSum != null" >
+        commissionSum = #{commissionSum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    update agent_device_relation
+    set agentId = #{agentId,jdbcType=BIGINT},
+      opsId = #{opsId,jdbcType=BIGINT},
+      deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      deviceImei = #{deviceImei,jdbcType=VARCHAR},
+      inventory = #{inventory,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      opsPhone = #{opsPhone,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      freePaperTotal = #{freePaperTotal,jdbcType=INTEGER},
+      payPaperTotal = #{payPaperTotal,jdbcType=INTEGER},
+      gzhLikeTotal = #{gzhLikeTotal,jdbcType=INTEGER},
+      gzhIncomeSum = #{gzhIncomeSum,jdbcType=INTEGER},
+      payPaperSum = #{payPaperSum,jdbcType=INTEGER},
+      commissionSum = #{commissionSum,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="query" resultType="java.util.HashMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />,
+    (gzhIncomeSum + payPaperSum) incomeTotal
+    from agent_device_relation
+    <where>
+      <if test="agentId != null" >
+        and agentId = #{agentId}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryObjectBydeviceImeiAndDeviceNo" resultType="com.dlc.modules.api.entity.AgentDeviceRelation" parameterType="com.dlc.modules.api.entity.AgentDeviceRelation" >
+    select
+    <include refid="Base_Column_List" />
+    from agent_device_relation
+    <where>
+     deviceNo = #{deviceNo}
+
+    </where>
+  </select>
+
+    <update id="deleteRelation">
+        UPDATE agent_device_relation
+        <set >
+            <if test="type == 1" >
+                agentId = 0,
+            </if>
+            <if test="type == 2" >
+                opsId = 0,
+            </if>
+        </set>
+        <where>
+            <if test="type == 1" >
+                agentId = #{agentId}
+            </if>
+            <if test="type == 2" >
+                opsId = #{agentId}
+            </if>
+        </where>
+    </update>
+
+    <select id="findAgentDeviceRelationByImei" resultType="map">
+        SELECT a.id,a.agentId,b.parentId,b.commissionType,b.commissionValue
+        from agent_device_relation a INNER JOIN agent b ON a.agentId=b.id
+        where a.deviceImei = #{imei};
+    </select>
+
+    <update id="updateRelationByImei">
+        UPDATE agent_device_relation SET status =#{status} WHERE deviceImei = #{imei}
+    </update>
+
+    <select id="findRelationByImei" resultType="map" parameterType="java.lang.String">
+        SELECT id,status,agentId,opsId FROM agent_device_relation WHERE deviceImei = #{imei}
+    </select>
+
+  <select id="checkOnline" resultType="map">
+        SELECT a.deviceNo,a.agentId,a.opsId,b.phone agentPhone,c.phone opsPone,a.addr
+        from agent_device_relation a
+		LEFT JOIN agent b on a.agentId = b.id
+		LEFT JOIN agent c on a.opsId = c.id
+    where
+    (unix_timestamp(now())-unix_timestamp(a.onLineTime)) &gt; #{min} and a.status = 1
+  </select>
+
+  <update id="offline" parameterType="java.util.List" >
+    update agent_device_relation set status = 2
+    where deviceNo IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+
+    <update id="updateOpsByDeviceNo" parameterType="map" >
+
+      UPDATE  agent_device_relation
+      <set>
+        <if test="opsId != null" >
+          opsId = #{opsId},
+        </if>
+        <if test="opsPhone != null" >
+          opsPhone = #{opsPhone},
+        </if>
+        <if test="inventory != null" >
+          inventory = #{inventory},
+        </if>
+      </set>
+      WHERE deviceNo = #{deviceNo}
+    </update>
+
+    <delete id="deleteRealRelation" parameterType="java.lang.Long">
+        DELETE from agent_device_relation WHERE agentId = #{agentId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.IncomeDao" >
+
+  <select id="queryTotal" resultType="int">
+    select count(*)
+    from
+    (SELECT TO_DAYS(createTime) createTime,sum(gzhIncomeSum) gzhIncomeSum,sum(payPaperSum) payPaperSum from device_income_total GROUP BY TO_DAYS(createTime)
+    ) a1
+    <where>
+      <if test="startTime != null and !''.equals(startTime)">
+        AND a1.createTime <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and !''.equals(endTime)">
+        AND a1.createTime <![CDATA[<=]]> #{endTime}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryListMapByMap" resultType="map">
+    select a1.*,IF(a2.advIncome is NULL,0,a2.advIncome) AS advIncome,a3.commissionSum,(a1.gzhIncomeSum+a1.payPaperSum+a3.commissionSum+IF(a2.advIncome is NULL,0,a2.advIncome)) AS RowCount
+    from
+    (SELECT from_days(TO_DAYS(createTime)) createTime,sum(gzhIncomeSum) gzhIncomeSum,sum(payPaperSum) payPaperSum from device_income_total GROUP BY TO_DAYS(createTime)
+    ) a1
+    LEFT JOIN
+    (SELECT from_days(TO_DAYS(b.createTime)) createTime,sum(price) advIncome from advertising b WHERE status !=5 GROUP BY TO_DAYS(b.createTime)
+    ) a2 on a1.createTime  =a2.createTime
+    LEFT JOIN
+    (SELECT from_days(TO_DAYS(c.createTime)) createTime,sum(money) commissionSum from commission_detail c  GROUP BY TO_DAYS(c.createTime)
+    ) a3 on a1.createTime  =a3.createTime
+    <where>
+      <if test="startTime != null and !''.equals(startTime)">
+        AND a1.createTime <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and !''.equals(endTime)">
+        AND a1.createTime <![CDATA[<=]]> #{endTime}
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by createTime desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="moneyTotal" resultType="int">
+    select ((SELECT sum(money) from gl_wallet WHERE type !=4) - ifnull((SELECT sum(money) from gl_wallet WHERE type  =4),0))
+  </select>
+</mapper>

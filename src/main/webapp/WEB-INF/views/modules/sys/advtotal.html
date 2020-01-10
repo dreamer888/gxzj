@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>收益统计</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="请输入广告名称">
+            </div>
+            <div class="form-group col-md-2">
+                <input id="sdate" class="Wdate" style="width: 100%;padding: 5px 10px;" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true,maxDate:'#F{$dp.$D(\'edate\')}'})"  placeholder="开始时间"  />
+            </div>
+            <div class="form-group col-md-2">
+                <input id="edate" class="Wdate" style="width: 100%;padding: 5px 10px;" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true,minDate:'#F{$dp.$D(\'sdate\')}',startDate:'#F{$dp.$D(\'sdate\',{d:+1})}'})"  placeholder="结束时间" /><br>
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            <h2>广告收益汇总统计:&nbsp;<span style="color: red;">{{priceTotal}}&nbsp;元</span></h2>
+            <!--<div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name"   @keyup.enter="query" placeholder="请输入......">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>-->
+
+            <!--<#if shiro.hasPermission("sys:myorder:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>-->
+
+            <!--<#if shiro.hasPermission("sys:myorder:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+
+            <#if shiro.hasPermission("sys:myorder:info")>
+                <a class="btn btn-primary" @click="detail"><i class="fa fa-list-alt"></i>&nbsp;详情</a>
+            </#if>-->
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <!--<div class="form-group">
+                <div class="col-sm-2 control-label">广告类型</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.type" placeholder="广告类型"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放城市</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.city" placeholder="投放城市"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放性别</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.sex" placeholder="投放性别"/>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放年龄</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.age" placeholder="投放年龄"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">消费水平</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.moneyLevel" placeholder="1.全部2.高3.中4.低"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告价格</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.price" placeholder="广告价格(分)"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.name" placeholder="广告名称"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">广告链接</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.link" placeholder="广告链接"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放开始时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.startTime" placeholder="投放开始时间"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">投放结束时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.endTime" placeholder="投放结束时间"/>
+                </div>
+            </div>
+
+            <div id="images" class="">
+              <div class="col-sm-2 control-label">广告图</div>
+              <div class="logo">
+                  <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                  <a class="btn btn-primary btn-xs upload">上传</a>
+              </div>
+            </div>-->
+            <!--<br/>-->
+
+            <!--<div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.status" placeholder="1.审核2.待投放3.投放中4.已结束"/>
+                </div>
+            </div>-->
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确认"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/advtotal.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/plugins/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

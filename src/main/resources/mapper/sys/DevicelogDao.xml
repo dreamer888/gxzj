@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.DevicelogDao" >
+
+  <select id="queryTotal" resultType="int">
+    select count(*) from devicelog
+  </select>
+
+  <select id="queryListMapByMap" resultType="map">
+    select
+    a1.*,a4.name
+    from devicelog a1,agent a4
+    <where>
+    a1.maintainerId = a4.id
+      <if test="name != null and name.trim() != ''">
+        and a4.`name` like concat('%',#{name},'%')
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by a1.createTime desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+</mapper>

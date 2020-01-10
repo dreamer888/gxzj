@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.ShoppingCarMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.ShoppingCar" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="goodsId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="goodsNum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="goodsName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="goodsImgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, goodsId, goodsNum, goodsName, goodsImgUrl, price, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from shopping_car
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shopping_car
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.ShoppingCar" >
+    insert into shopping_car (id, userId, goodsId, 
+      goodsNum, goodsName, goodsImgUrl, 
+      price, createTime)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, 
+      #{goodsNum,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR}, #{goodsImgUrl,jdbcType=VARCHAR}, 
+      #{price,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.ShoppingCar" >
+    insert into shopping_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="goodsId != null" >
+        goodsId,
+      </if>
+      <if test="goodsNum != null" >
+        goodsNum,
+      </if>
+      <if test="goodsName != null" >
+        goodsName,
+      </if>
+      <if test="goodsImgUrl != null" >
+        goodsImgUrl,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsNum != null" >
+        #{goodsNum,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsImgUrl != null" >
+        #{goodsImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.ShoppingCar" >
+    update shopping_car
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goodsId = #{goodsId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsNum != null" >
+        goodsNum = #{goodsNum,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsImgUrl != null" >
+        goodsImgUrl = #{goodsImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.ShoppingCar" >
+    update shopping_car
+    set userId = #{userId,jdbcType=BIGINT},
+      goodsId = #{goodsId,jdbcType=BIGINT},
+      goodsNum = #{goodsNum,jdbcType=INTEGER},
+      goodsName = #{goodsName,jdbcType=VARCHAR},
+      goodsImgUrl = #{goodsImgUrl,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

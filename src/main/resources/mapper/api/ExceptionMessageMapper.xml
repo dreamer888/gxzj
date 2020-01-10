@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.ExceptionMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.ExceptionMessage" >
+    <constructor >
+      <idArg column="messageId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressDetail" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="context" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    messageId, deviceNo, addressDetail, context, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from exception_message
+    where messageId = #{messageId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from exception_message
+    where messageId = #{messageId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.ExceptionMessage" >
+    insert into exception_message (messageId, deviceNo, addressDetail, 
+      context, createTime)
+    values (#{messageId,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, #{addressDetail,jdbcType=BIGINT}, 
+      #{context,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.ExceptionMessage" >
+    insert into exception_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        messageId,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="addressDetail != null" >
+        addressDetail,
+      </if>
+      <if test="context != null" >
+        context,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        #{messageId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=BIGINT},
+      </if>
+      <if test="context != null" >
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.ExceptionMessage" >
+    update exception_message
+    <set >
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressDetail != null" >
+        addressDetail = #{addressDetail,jdbcType=BIGINT},
+      </if>
+      <if test="context != null" >
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where messageId = #{messageId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.ExceptionMessage" >
+    update exception_message
+    set deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      addressDetail = #{addressDetail,jdbcType=BIGINT},
+      context = #{context,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where messageId = #{messageId,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryList" resultType="java.util.HashMap" parameterType="map" >
+    select
+    a1.*
+    from exception_message a1,agent_device_relation a2
+    <where>
+    a1.deviceNo = a2.deviceNo and a2.agentId = #{agentId}
+
+    </where>
+    ORDER BY a1.createTime DESC
+  </select>
+
+  <insert id="insertAll" parameterType="java.util.List" >
+    insert into exception_message
+    (deviceNo,addressDetail,context,createTime)
+    values
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.deviceNo,jdbcType=VARCHAR},#{item.addressDetail,jdbcType=BIGINT},#{item.context,jdbcType=VARCHAR},
+    #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
+    <select id="findEM" resultType="com.dlc.modules.api.entity.ExceptionMessage" parameterType="java.lang.String">
+        SELECT messageId,createTime FROM exception_message
+        WHERE deviceNo = #{imei}
+        ORDER BY createTime DESC limit 1
+    </select>
+</mapper>

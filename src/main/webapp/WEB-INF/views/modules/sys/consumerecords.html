@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>消费记录</title>
+    <#include "/header.html">
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <select class="form-control" v-model="q.status">
+                    <option value="" >全部</option>
+                    <option value="0" >未支付</option>
+                    <option value="1" >已完成</option>
+                    <option value="2" >未出货</option>
+                </select>
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">设备ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.deviceId" placeholder="设备ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">用户openId</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.openId" placeholder="用户openId"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">设备编号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.deviceNo" placeholder="设备编号"/>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">合计价格</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.totalPrice" placeholder="合计价格"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数量</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.num" placeholder="数量"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">单价</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.price" placeholder="单价"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.status" placeholder="1.已出货2.未出货"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">类型</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="consumerecords.type" placeholder="1.免费领取2.下单购买"/>
+                </div>
+            </div>
+
+
+            <!--<div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="advertising.status" placeholder="1.审核2.待投放3.投放中4.已结束"/>
+                </div>
+            </div>-->
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/consumerecords.js?_${.now?long}"></script>
+
+</body>
+</html>

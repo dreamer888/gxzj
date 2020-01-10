@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.WalletDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.WalletDetailEntity" id="walletDetailMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="type" column="type"/>
+        <result property="money" column="money"/>
+        <result property="wxCount" column="wxCount"/>
+        <result property="transactionNumber" column="transactionNumber"/>
+        <result property="reason" column="reason"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="createTime"/>
+        <result property="orderNo" column="orderNo"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.WalletDetailEntity">
+		select * from wallet_detail where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.WalletDetailEntity">
+		SELECT w.*,a.phone,a.name AS username,a.type AS userType
+        FROM wallet_detail w
+        LEFT JOIN agent a ON a.id = w.userId
+        <where>
+
+                 w.type = 1
+            <if test="status != null">
+                AND w.status = #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wallet_detail 
+	</select>
+	 
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.WalletDetailEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into wallet_detail
+		(
+			`userId`, 
+			`type`, 
+			`money`, 
+			`wxCount`, 
+			`transactionNumber`, 
+			`reason`, 
+			`status`,
+			`orderNo`,
+			`createTime`,
+			`checkedTime`,
+			`transactionTime`
+		)
+		values
+		(
+			#{userId}, 
+			#{type}, 
+			#{money}, 
+			#{wxCount}, 
+			#{transactionNumber}, 
+			#{reason}, 
+			#{status},
+			#{orderNo},
+			#{createTime},
+			#{checkedTime},
+			#{transactionTime},
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.WalletDetailEntity">
+		update wallet_detail 
+		<set>
+			<if test="userId != null">`userId` = #{userId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="money != null">`money` = #{money}, </if>
+			<if test="wxCount != null">`wxCount` = #{wxCount}, </if>
+			<if test="transactionNumber != null">`transactionNumber` = #{transactionNumber}, </if>
+			<if test="reason != null">`reason` = #{reason}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="orderNo != null">`orderNo` = #{orderNo}, </if>
+			<if test="createTime != null">`createTime` = #{createTime},</if>
+			<if test="checkedTime != null">`checkedTime` = #{checkedTime},</if>
+			<if test="transactionTime != null">`transactionTime` = #{transactionTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from wallet_detail where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from wallet_detail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

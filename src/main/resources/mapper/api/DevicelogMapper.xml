@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.DevicelogMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Devicelog" >
+    <constructor >
+      <idArg column="logId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="addressId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="maintainerId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="purpose" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    logId, deviceNo, addressId, maintainerId, purpose, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from devicelog
+    where logId = #{logId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from devicelog
+    where logId = #{logId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Devicelog" >
+    insert into devicelog (logId, deviceNo, addressId, 
+      maintainerId, purpose, createTime
+      )
+    values (#{logId,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, #{addressId,jdbcType=BIGINT}, 
+      #{maintainerId,jdbcType=BIGINT}, #{purpose,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.Devicelog" >
+    insert into devicelog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        logId,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="addressId != null" >
+        addressId,
+      </if>
+      <if test="maintainerId != null" >
+        maintainerId,
+      </if>
+      <if test="purpose != null" >
+        purpose,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressId != null" >
+        #{addressId,jdbcType=BIGINT},
+      </if>
+      <if test="maintainerId != null" >
+        #{maintainerId,jdbcType=BIGINT},
+      </if>
+      <if test="purpose != null" >
+        #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Devicelog" >
+    update devicelog
+    <set >
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addressId != null" >
+        addressId = #{addressId,jdbcType=BIGINT},
+      </if>
+      <if test="maintainerId != null" >
+        maintainerId = #{maintainerId,jdbcType=BIGINT},
+      </if>
+      <if test="purpose != null" >
+        purpose = #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where logId = #{logId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Devicelog" >
+    update devicelog
+    set deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      addressId = #{addressId,jdbcType=BIGINT},
+      maintainerId = #{maintainerId,jdbcType=BIGINT},
+      purpose = #{purpose,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where logId = #{logId,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryList" resultType="java.util.HashMap" parameterType="map" >
+    select
+    a1.*,a4.name
+    from devicelog a1,agent_device_relation a2,agent a4
+    <where>
+      a1.deviceNo = a2.deviceNo and a1.maintainerId = a4.id
+      <if test="agentId != null" >
+        and a2.agentId = #{agentId}
+      </if>
+    </where>
+  </select>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.ExpressMapper" >
+  <!--查询快递表-->
+  <select id="queryExpress" parameterType="map" resultType="com.dlc.modules.api.entity.Result">
+    SELECT nu,ischeck,com,status,state,`condition` FROM express
+    <where>
+      <if test="nu!=null">
+        AND nu = #{nu}
+      </if>
+      <if test="com!=null">
+        AND com = #{com}
+      </if>
+    </where>
+  </select>
+
+  <!--更新快递表-->
+  <update id="updateExpressByExpressNu" parameterType="map">
+    update express
+    <set >
+      <if test="message != null" >
+        message = #{message},
+      </if>
+      <if test="nu != null" >
+        nu = #{nu},
+      </if>
+      <if test="ischeck != null" >
+        ischeck = #{ischeck},
+      </if>
+      <if test="com != null" >
+        com = #{com},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="state != null" >
+        state = #{state},
+      </if>
+      <if test="condition != null" >
+        `condition` = #{condition}
+      </if>
+    </set>
+    where nu = #{nu}
+  </update>
+
+  <!--新增快递详情表-->
+  <insert id="addExpressDetail" parameterType="map">
+    insert into express_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="nu != null" >
+        nu,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="context != null" >
+        context,
+      </if>
+      <if test="ftime != null" >
+        ftime
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="nu != null" >
+        #{nu,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="context != null" >
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="ftime != null" >
+        #{ftime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <!--新增快递表记录-->
+  <insert id="addExpress" parameterType="map">
+    insert into express
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="nu != null" >
+        nu,
+      </if>
+      <if test="ischeck != null" >
+        ischeck,
+      </if>
+      <if test="com != null" >
+        com,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="condition != null" >
+        `condition`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="nu != null" >
+        #{nu,jdbcType=VARCHAR},
+      </if>
+      <if test="ischeck != null" >
+        #{ischeck,jdbcType=VARCHAR},
+      </if>
+      <if test="com != null" >
+        #{com,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="condition != null" >
+        #{condition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--查询快递详情-->
+  <select id="queryExpressList" parameterType="com.dlc.modules.api.entity.Result" resultType="map">
+    SELECT message,e.nu,ischeck,com,status,state,`condition`,d.context,d.ftime,d.time FROM express e
+    LEFT JOIN express_detail d ON e.nu=d.nu
+    <where>
+      <if test="nu != null">
+       AND e.nu = #{nu}
+      </if>
+      <if test="com != null">
+      AND com = #{com}
+      </if>
+    </where>
+    ORDER BY ftime DESC
+  </select>
+
+  <!--根据快递号查询快递最新详情-->
+  <select id="queryExpressLastMsg" parameterType="java.lang.String" resultType="com.dlc.modules.api.entity.ResultItem">
+    SELECT nu,context,ftime,time FROM express_detail
+    WHERE nu = #{nu} ORDER BY ftime DESC limit 1
+  </select>
+
+  <!--删除快递详情-->
+  <delete id="delExpressDetail" parameterType="map">
+    DELETE FROM express_detail WHERE nu = #{nu}
+  </delete>
+</mapper>

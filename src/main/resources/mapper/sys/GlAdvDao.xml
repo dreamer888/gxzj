@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.GlAdvDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.GlAdvEntity" id="glAdvMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+		<result property="imgUrl" column="imgUrl"/>
+		<result property="status" column="status"/>
+		<result property="linkUrl" column="linkUrl"/>
+        <result property="sort" column="sort"/>
+		<result property="createTime" column="createTime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.GlAdvEntity">
+		select * from gl_adv where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.GlAdvEntity">
+	select * from gl_adv
+	<where>
+		<if test="name!=null and name.trim()!=''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+	</where>
+	<choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by sort DESC
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from gl_adv
+		<where>
+			<if test="name!=null and name.trim()!=''">
+				AND name LIKE concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.dlc.modules.sys.entity.GlAdvEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into gl_adv
+		(
+			`name`,
+			`content`,
+			`imgUrl`,
+			`sort`,
+			`status`,
+			`linkUrl`,
+			`createTime`
+		)
+		values
+		(
+			#{name},
+			#{content},
+			#{imgUrl},
+			#{sort},
+			#{status},
+			#{linkUrl},
+			#{createTime}
+		)
+	</insert>
+
+	 
+	<update id="update" parameterType="com.dlc.modules.sys.entity.GlAdvEntity">
+		update gl_adv
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+            <if test="content != null">`content` = #{content}, </if>
+            <if test="imgUrl != null">`imgUrl` = #{imgUrl}, </if>
+			<if test="sort != null">`sort` = #{sort},</if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="linkUrl != null">`linkUrl` = #{linkUrl},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from gl_adv where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from gl_adv where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+    <select id="queryInfo" resultType="map">
+        SELECT imgUrl,content,name
+        FROM gl_adv
+        ORDER BY sort asc,createTime DESC
+        LIMIT 0,1
+    </select>
+
+
+</mapper>

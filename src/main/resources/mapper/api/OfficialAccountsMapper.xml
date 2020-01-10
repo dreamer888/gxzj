@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.OfficialAccountsMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.OfficialAccounts" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="AppId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="appSecret" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="freeCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wxCount" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="originalPrice" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="deductPrice" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="upperLimit" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="imgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="deviceId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="agentId" jdbcType="BIGINT" javaType="java.lang.Long" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, AppId, appSecret, freeCode, wxCount, originalPrice, deductPrice, upperLimit, 
+    imgUrl, deviceId, status, createTime,agentId,deviceNo,token,serverURL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from official_accounts
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from official_accounts
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.OfficialAccounts" >
+    insert into official_accounts (id, name, AppId, 
+      appSecret, freeCode, wxCount, 
+      originalPrice, deductPrice, upperLimit, 
+      imgUrl, deviceId, status, 
+      createTime,agentId,deviceNo,token,serverURL)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{appSecret,jdbcType=VARCHAR}, #{freeCode,jdbcType=VARCHAR}, #{wxCount,jdbcType=VARCHAR}, 
+      #{originalPrice,jdbcType=INTEGER}, #{deductPrice,jdbcType=INTEGER}, #{upperLimit,jdbcType=INTEGER}, 
+      #{imgUrl,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP},#{agentId,jdbcType=BIGINT}, #{deviceNo,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR},#{serverURL,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.OfficialAccounts" >
+    insert into official_accounts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agentId != null" >
+       agentId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="appId != null" >
+        AppId,
+      </if>
+      <if test="appSecret != null" >
+        appSecret,
+      </if>
+      <if test="freeCode != null" >
+        freeCode,
+      </if>
+      <if test="wxCount != null" >
+        wxCount,
+      </if>
+      <if test="originalPrice != null" >
+        originalPrice,
+      </if>
+      <if test="deductPrice != null" >
+        deductPrice,
+      </if>
+      <if test="upperLimit != null" >
+        upperLimit,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="deviceId != null" >
+        deviceId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+        <if test="deviceNo != null" >
+            deviceNo,
+        </if>
+        <if test="token != null" >
+            token,
+        </if>
+        <if test="serverURL != null" >
+            serverURL,
+        </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null" >
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="freeCode != null" >
+        #{freeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="wxCount != null" >
+        #{wxCount,jdbcType=VARCHAR},
+      </if>
+      <if test="originalPrice != null" >
+        #{originalPrice,jdbcType=INTEGER},
+      </if>
+      <if test="deductPrice != null" >
+        #{deductPrice,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null" >
+        #{upperLimit,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="serverURL != null" >
+        #{serverURL,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.OfficialAccounts" >
+    update official_accounts
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        AppId = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null" >
+        appSecret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="freeCode != null" >
+        freeCode = #{freeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="wxCount != null" >
+        wxCount = #{wxCount,jdbcType=VARCHAR},
+      </if>
+      <if test="originalPrice != null" >
+        originalPrice = #{originalPrice,jdbcType=INTEGER},
+      </if>
+      <if test="deductPrice != null" >
+        deductPrice = #{deductPrice,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null" >
+        upperLimit = #{upperLimit,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        deviceId = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentId != null" >
+          agentId = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceNo != null" >
+          deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+          token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="serverURL != null" >
+          serverURL = #{serverURL,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.OfficialAccounts" >
+    update official_accounts
+    set name = #{name,jdbcType=VARCHAR},
+      AppId = #{appId,jdbcType=VARCHAR},
+      appSecret = #{appSecret,jdbcType=VARCHAR},
+      freeCode = #{freeCode,jdbcType=VARCHAR},
+      wxCount = #{wxCount,jdbcType=VARCHAR},
+      originalPrice = #{originalPrice,jdbcType=INTEGER},
+      deductPrice = #{deductPrice,jdbcType=INTEGER},
+      upperLimit = #{upperLimit,jdbcType=INTEGER},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      deviceId = #{deviceId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      agentId = #{agentId,jdbcType=BIGINT},
+      deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      serverURL = #{serverURL,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+   <select id="queryOfficialAccountsList" parameterType="map" resultType="map">
+       SELECT *
+       FROM official_accounts a
+
+       <where>
+
+          <if test="openId !=null">
+           a.appId NOT IN(SELECT b.appId from public_fans b where b.openId = #{openId})
+          </if>
+           <if test="deviceNo !=null">
+               and a.deviceNo =#{deviceNo}
+           </if>
+           <if test="deviceId !=null">
+               and a.deviceId =#{deviceId}
+           </if>
+           <if test="status !=null">
+               and a.status =#{status}
+           </if>
+           <if test="agentId !=null">
+               AND a.agentId = #{agentId}
+           </if>
+       </where>
+       ORDER BY a.createTime DESC
+       <if test="offset != null and limit != null">
+           limit #{offset}, #{limit}
+       </if>
+   </select>
+
+    <select id="queryofficialAccountsCount" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM official_accounts
+        <where>
+            <if test="deviceNo !=null">
+                and deviceNo =#{deviceNo}
+            </if>
+            <if test="deviceId !=null">
+                and deviceId =#{deviceId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryOfficialCountInfo" resultType="com.dlc.modules.api.entity.OfficialAccounts" parameterType="Long">
+        SELECT *
+        FROM official_accounts
+        WHERE id= #{id}
+    </select>
+
+    <select id="findOfficialAccountByAppIdAndDeviceNo" resultType="map">
+        SELECT id,agentId,deductPrice,originalPrice FROM official_accounts
+        <where>
+            appId = #{appId}
+            <if test="deviceNo != null">
+                AND deviceNo = #{deviceNo}
+            </if>
+        </where>
+         limit 1
+    </select>
+</mapper>

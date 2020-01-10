@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.TempUserDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.TempUserDevice" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="openid" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="imei" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="deviceNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="appid" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="freeCode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="glOpenid" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, openid, imei, deviceNo, appid, freeCode, glOpenid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from temp_user_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from temp_user_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.TempUserDevice" >
+    insert into temp_user_device (id, openid, imei, 
+      deviceNo, appid, freeCode, 
+      glOpenid)
+    values (#{id,jdbcType=BIGINT}, #{openid,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, 
+      #{deviceNo,jdbcType=VARCHAR}, #{appid,jdbcType=VARCHAR}, #{freeCode,jdbcType=VARCHAR}, 
+      #{glOpenid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.TempUserDevice" >
+    insert into temp_user_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo,
+      </if>
+      <if test="appid != null" >
+        appid,
+      </if>
+      <if test="freeCode != null" >
+        freeCode,
+      </if>
+      <if test="glOpenid != null" >
+        glOpenid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceNo != null" >
+        #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="freeCode != null" >
+        #{freeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="glOpenid != null" >
+        #{glOpenid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.TempUserDevice" >
+    update temp_user_device
+    <set >
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceNo != null" >
+        deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        appid = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="freeCode != null" >
+        freeCode = #{freeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="glOpenid != null" >
+        glOpenid = #{glOpenid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.TempUserDevice" >
+    update temp_user_device
+    set openid = #{openid,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      deviceNo = #{deviceNo,jdbcType=VARCHAR},
+      appid = #{appid,jdbcType=VARCHAR},
+      freeCode = #{freeCode,jdbcType=VARCHAR},
+      glOpenid = #{glOpenid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="queryUserDeviceInfo" parameterType="String" resultType="com.dlc.modules.api.entity.TempUserDevice">
+        SELECT *
+        FROM temp_user_device
+        WHERE openid = #{openid}
+    </select>
+
+    <delete id="deleteRecordByMap" parameterType="map">
+      DELETE
+      FROM temp_user_device
+      WHERE openid = #{openid} AND appid =#{appid}
+    </delete>
+</mapper>

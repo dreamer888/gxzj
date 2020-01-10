@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<#include "/header.html">
+<script src="${request.contextPath}/statics/plugins/ueditor/ueditor.config.js"></script>
+<script src="${request.contextPath}/statics/plugins/ueditor/ueditor.all.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div class="panel panel-default">
+		<form id="ueditorForm" method="post">
+			<table class="table">
+				<tr>
+					<td>
+						<input type="text" class="form-control" v-model="sysConsole.title" name="title" placeholder="标题">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<script id="editor" v-model="sysConsole.content" name="content" type="text/plain" style="width:98%;height:350px;"></script>
+                        <input type="hidden" v-model="sysConsole.id" name="id">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <#if shiro.hasPermission("sys:sysconsole:update")>
+                        <a class="btn btn-primary" @click="save">&nbsp;保存</a>
+                        </#if>
+                        <a class="btn btn-primary" @click="cancel">&nbsp;取消</a>
+                    </td>
+                </tr>
+            </table>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/sysconsole.js"></script>
+</body>
+</html>

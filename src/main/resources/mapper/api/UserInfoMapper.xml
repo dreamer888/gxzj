@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.UserInfo" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="openId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sex" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="headImgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="age" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="province" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, openId, phone, name, sex, headImgUrl, age, city, province, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.UserInfo" >
+    insert into user_info (id, openId, phone, 
+      name, sex, headImgUrl, 
+      age, city, province, 
+      createTime)
+    values (#{id,jdbcType=BIGINT}, #{openId,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{headImgUrl,jdbcType=VARCHAR}, 
+      #{age,jdbcType=TINYINT}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.UserInfo" >
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="openId != null" >
+        openId,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="headImgUrl != null" >
+        #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.UserInfo" >
+    update user_info
+    <set>
+      <if test="openId != null" >
+        openId = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="headImgUrl != null" >
+        headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=TINYINT},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.UserInfo" >
+    update user_info
+    set openId = #{openId,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+      age = #{age,jdbcType=TINYINT},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="queryUserInfo" resultType="map" parameterType="String">
+        SELECT *
+        FROM user_info
+        WHERE openId= #{openId}
+    </select>
+
+    <select id="queryUserAppId" parameterType="map" resultType="com.dlc.modules.api.entity.UserInfo">
+        SELECT *
+        FROM user_info
+        <where>
+            <if test="openId != null">
+                and openId = #{openId}
+            </if>
+            <if test="appid != null">
+                and appid = #{appid}
+            </if>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserAppId" parameterType="map">
+        UPDATE user_info
+        SET appid = #{appid}
+        WHERE openId = #{openId}
+    </update>
+
+    <update id="updateUserCount" parameterType="map">
+        UPDATE user_info
+        SET count = #{count}
+        WHERE openId = #{openId}
+    </update>
+
+    <update id="updateUserCountZero">
+        UPDATE user_info
+        SET count = 0
+    </update>
+
+    <update id="updateUserByOpenId" parameterType="com.dlc.modules.api.entity.UserInfo">
+        UPDATE user_info
+        <set>
+            <if test="phone != null" >
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null" >
+                sex = #{sex,jdbcType=TINYINT},
+            </if>
+            <if test="headImgUrl != null" >
+                headImgUrl = #{headImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null" >
+                age = #{age,jdbcType=TINYINT},
+            </if>
+            <if test="city != null" >
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE  openId = #{openId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

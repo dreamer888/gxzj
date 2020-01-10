@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品</title>
+    <#include "/header.html">
+        <script src="${request.contextPath}/statics/plugins/ueditor-1.4.3.3/ueditor.config.js"></script>
+        <script src="${request.contextPath}/statics/plugins/ueditor-1.4.3.3/ueditor.all.js"></script>
+
+
+        </head>
+        <style>
+            .logo {
+                display: inline-block;
+                text-align: center;
+                margin-right: 15px;
+            }
+            .logo .logo_img{
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+            .upload {
+                margin: 5px 0 15px 0px;
+            }
+        </style>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <#if shiro.hasPermission("sys:goods:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+            <#if shiro.hasPermission("sys:goods:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+            <#if shiro.hasPermission("sys:goods:delete")>
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal" style="width: 80%;" id="ueditorForm" action="" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="goods.name" name="name" placeholder="名称"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品分类</div>
+                <div class="col-sm-10">
+                    <select class="form-control" v-model="goods.categoryId" name="">
+                        <option value="0" style="color: #afafaf">---请选择商品分类---</option>
+                        <option v-for="(item,index) in categoryList" :value="item.categoryId">{{item.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">价格(元)</div>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" v-model="goods.price" placeholder="价格"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">运费(元)</div>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" v-model="goods.freight" placeholder="价格"/>
+                </div>
+            </div>
+
+            <!-- <div class="form-group">
+                 <div class="col-sm-2 control-label">商品描述</div>
+                 <div class="col-sm-10">
+                     <input type="text" class="form-control" v-model="goods.remark" placeholder="描述包含图片地址"/>
+                 </div>
+             </div>-->
+
+            <div id="images" class="form-group">
+                <div class="col-sm-2 control-label">商品主图</div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">图文详情</div>
+                <div class="col-sm-10">
+                    <tr>
+                        <td>
+                            <script type="text/javascript">
+                                //初始化ueditor工具
+                                var ue = UE.getEditor('editor');
+                            </script>
+                            <script id="editor" v-model="goods.remark" name="remark" type="text/plain" style="width:100%;height:350px;"></script>
+                            </td>
+                            </tr>
+                            </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2 control-label">状态</div>
+                                <label class="radio-inline">
+                                <input type="radio" name="status" value="1" v-model="goods.status"/> 上架
+                                </label>
+                                <label class="radio-inline">
+                                <input type="radio" name="status" value="2" v-model="goods.status"/> 下架
+                                </label>
+                                <label class="radio-inline">
+                                <input type="radio" name="status" value="0" v-model="goods.status"/> 未上架
+                                </label>
+                                </div>
+                                <!--<div class="form-group">
+                                <div class="col-sm-2 control-label">创建人</div>
+                                <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="goods.creator" placeholder="创建人"/>
+                                </div>
+                                </div>-->
+                                <!--<div class="form-group">
+                                <div class="col-sm-2 control-label">创建时间</div>
+                                <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="goods.create_Time" placeholder="创建时间"/>
+                                </div>
+                                </div>-->
+                                <!--<div class="form-group">
+                                <div class="col-sm-2 control-label">修改人id</div>
+                                <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="goods.modify_User_Id" placeholder="修改人id"/>
+                                </div>
+                                </div>-->
+                                <!--<div class="form-group">
+                                <div class="col-sm-2 control-label">修改时间</div>
+                                <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="goods.modify_Time" placeholder="修改时间"/>
+                                </div>
+                                </div>-->
+                                <div class="form-group">
+                                <div class="col-sm-2 control-label"></div>
+                                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                                </div>
+                                </form>
+                                </div>
+
+                                <div v-show="!showDetail" class="panel panel-default">
+                                <div class="panel-heading">{{title}}</div>
+                            <form class="form-horizontal" style="width: 750px;">
+
+                                <div class="form-group">
+                                <div class="project" style="background-color: inherit;">
+                                <span style="padding: 0px 10px;background: rgba(204, 204, 204, 1);float: left;">商品信息</span><br>
+                                </div>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 32px;">
+                                <div class="device-item">
+                                <span>商品编号:</span>
+                            <span>{{goods.id}}</span>
+                            </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 32px;">
+                                <div class="device-item">
+                                <span>名称:</span>
+                            <span>{{goods.name}}</span>
+                            </div>
+                            </div>
+                            <div class="form-group" style="margin-left: 32px;">
+                                <div class="device-item">
+                                <span>分类:</span>
+                            <span>{{goods.categoryName}}</span>
+                            </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="project" style="background-color: inherit;">
+                                <span style="padding: 0px 10px;background: rgba(204, 204, 204, 1);float: left;">商品描述</span><br>
+                                </div>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 32px;">
+                                <div class="device-item">
+                                <span>详细描述:</span>
+                            <span>{{goods.remark}}</span>
+                            </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="project" style="background-color: inherit;">
+                                <span style="padding: 0px 10px;background: rgba(204, 204, 204, 1);float: left;">图片介绍</span><br>
+                                </div>
+                                </div>
+
+                                <div class="form-group">
+                                <div class="form-group" style="margin-left: 35px;">
+
+                                <img v-for="item in tempArray" :src="item" width="150px" height="200px" style="margin-right:10px;">
+                                </div>
+                                </div>
+
+                                <!--分页-->
+                                <div style="overflow: hidden; text-align: center;margin-top: 20px;">
+                                <span class=""></span>
+                                <ul id="bp-element2"></ul>
+                                </div>
+                                </form>
+                                </div>
+                                <script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+                            <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+                            <script src="${request.contextPath}/statics/js/modules/sys/goods.js?_${.now?long}"></script>
+</body>
+</html>

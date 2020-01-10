@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.IndexTotalMapper" >
+
+  <select id="queryTotal" resultType="java.util.HashMap" >
+        select
+        count(1) deviceTotal,
+		(SELECT count(1) from device a1,agent_device_relation a2 where a1.status = 1 and a1.deviceNo = a2.deviceNo and a2.agentId = #{agentId}) onlineTotal,
+		(SELECT ifnull((sum(b1.freePaperTotal)+sum(b1.payPaperTotal)),0) paperTotal from device_consume_total b1,agent_device_relation b2 WHERE TO_DAYS(NOW()) - TO_DAYS(b1.createTime) = 1 and b1.deviceNo = b2.deviceNo and b2.agentId = #{agentId}) paperTotal,
+		(SELECT ifnull((sum(c1.payPaperSum)+sum(c1.commissionSum)+sum(c1.gzhIncomeSum)),0) incomeTotal from device_income_total c1,agent_device_relation c2 WHERE TO_DAYS(NOW()) - TO_DAYS(c1.createTime) = 1 and c1.deviceNo = c2.deviceNo and c2.agentId = #{agentId}) incomeTotal
+        from device d1,agent_device_relation d2
+        where d1.deviceNo = d2.deviceNo and d2.agentId = #{agentId}
+  </select>
+
+</mapper>

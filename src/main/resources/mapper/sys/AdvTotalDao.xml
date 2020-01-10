@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dlc.modules.sys.dao.AdvTotalDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.dlc.modules.sys.entity.AdvTotalEntity" id="AdvTotalMap">
+        <result property="id" column="id"/>
+        <result property="advId" column="advId"/>
+        <result property="clickNum" column="clickNum"/>
+        <result property="showNum" column="showNum"/>
+        <result property="createTime" column="createTime"/>
+        <result property="advType" column="advType"/>
+		<result property="price" column="price"/>
+		<result property="name" column="aName"/>
+		<result property="startTime" column="startTime"/>
+		<result property="endTime" column="endTime"/>
+		<result property="name" column="name"/>
+		<result property="id" column="aId"/>
+		<result property="id" column="dId"/>
+		<result property="type" column="type"/>
+		<result property="goodsPrice" column="goodsPrice"/>
+		<result property="inCome" column="inCome"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.dlc.modules.sys.entity.AdvTotalEntity">
+		select * from adv_total where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.dlc.modules.sys.entity.AdvTotalEntity">
+		SELECT t.*,d.id as dId,d.type,d.price AS goodsPrice,d.name,d.startTime,d.endTime,a.id as aId,a.name as aName,if(d.type='2',((showNum/1000)*d.price),clickNum*d.price) AS inCome FROM adv_total t
+		LEFT JOIN advertising d ON t.advId = d.id
+		LEFT JOIN agent a ON a.id = d.userId
+		<where>
+			<if test="name!=null and name != ''">
+				AND d.name LIKE concat('%',#{name},'%')
+			</if>
+            <if test="startTime != null and !''.equals(startTime)">
+                AND t.createTime <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime != null and !''.equals(endTime)">
+                AND t.createTime <![CDATA[<=]]> #{endTime}
+            </if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by t.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryCountPrice" resultType="int">
+		SELECT sum(incu) from (SELECT if(d.type='2',(showNum/1000)*d.price,clickNum*d.price) AS incu FROM adv_total t
+		LEFT JOIN advertising d ON t.advId = d.id
+		LEFT JOIN agent a ON a.id = d.userId) a
+	</select>
+
+ 	<select id="queryTotal" resultType="int">
+		SELECT COUNT(*) FROM adv_total t
+		LEFT JOIN advertising d ON t.advId = d.id
+		LEFT JOIN agent a ON a.id = d.userId
+		<where>
+			<if test="name!=null and name != ''">
+				AND d.name LIKE concat('%',#{name},'%')
+			</if>
+			<if test="startTime != null and !''.equals(startTime)">
+				AND t.createTime <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null and !''.equals(endTime)">
+				AND t.createTime <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByCondition" parameterType="map" resultType="map">
+		SELECT * FROM about_us a
+		<where>
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+			<if test="appName != null and appName.trim() != ''">
+				and a.app_name = #{appName}
+			</if>
+			<if test="version != null and version.trim() != ''">
+				and a.version = #{version}
+			</if>
+		</where>
+	</select>
+
+	<delete id="delete">
+		delete from about_us where id = #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from about_us where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

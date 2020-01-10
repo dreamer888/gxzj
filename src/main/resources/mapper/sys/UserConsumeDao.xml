@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.UserConsumeDao" >
+
+  <select id="queryTotal" resultType="int">
+    select count(*) from user_consume
+  </select>
+
+  <select id="queryListMapByMap" resultType="map">
+    select
+    u1.*,
+    u2.name,u2.province,u2.city,u2.phone,u2.sex
+    from user_consume u1,user_info u2
+    <where>
+      u1.openId = u2.openId
+      <if test="name != null and name.trim() != ''">
+        and u2.`name` like concat('%',#{name},'%')
+      </if>
+      <if test="status != null">
+      and u1.`status` = #{status}
+    </if>
+      <if test="type != null">
+        and u1.`type` = #{type}
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by createTime desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+</mapper>

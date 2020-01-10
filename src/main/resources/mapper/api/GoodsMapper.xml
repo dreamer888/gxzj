@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.api.dao.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.dlc.modules.api.entity.Goods" >
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="userId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="categoryId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="imgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="freight" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="remark" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="carouselImgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="remarkImgUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="deleteStatus" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, categoryId, name, price, imgUrl, status, freight, remark, carouselImgUrl, 
+    remarkImgUrl, deleteStatus, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.dlc.modules.api.entity.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id!=null">
+        id,
+      </if>
+      <if test="userId!=null">
+        userId,
+      </if>
+      <if test="categoryId!=null">
+        categoryId,
+      </if>
+      <if test="name!=null">
+        name,
+      </if>
+      <if test="price!=null">
+        price,
+      </if>
+      <if test="imgUrl!=null">
+        imgUrl,
+      </if>
+      <if test="status!=null">
+        status,
+      </if>
+      <if test="freight!=null">
+        freight,
+      </if>
+      <if test="remark!=null">
+        remark,
+      </if>
+      <if test="carouselImgUrl!=null">
+        carouselImgUrl,
+      </if>
+      <if test="remarkImgUrl!=null">
+        remarkImgUrl,
+      </if>
+      <if test="deleteStatus!=null">
+      deleteStatus,
+    </if>
+      <if test="createTime!=null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="userId!=null">
+        #{userId},
+      </if>
+      <if test="categoryId!=null">
+        #{categoryId},
+      </if>
+      <if test="name!=null">
+        #{name},
+      </if>
+      <if test="price!=null">
+        #{price},
+      </if>
+      <if test="imgUrl!=null">
+        #{imgUrl},
+      </if>
+      <if test="status!=null">
+        #{status},
+      </if>
+      <if test="freight!=null">
+        #{freight},
+      </if>
+      <if test="remark!=null">
+        #{remark},
+      </if>
+      <if test="carouselImgUrl!=null">
+        #{carouselImgUrl},
+      </if>
+      <if test="remarkImgUrl!=null">
+        #{remarkImgUrl},
+      </if>
+      <if test="deleteStatus!=null">
+        #{deleteStatus},
+      </if>
+      <if test="createTime!=null">
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertSelective" parameterType="com.dlc.modules.api.entity.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="categoryId != null" >
+        categoryId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="freight != null" >
+        freight,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="carouselImgUrl != null" >
+        carouselImgUrl,
+      </if>
+      <if test="remarkImgUrl != null" >
+        remarkImgUrl,
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="freight != null" >
+        #{freight,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="carouselImgUrl != null" >
+        #{carouselImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarkImgUrl != null" >
+        #{remarkImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteStatus != null" >
+        #{deleteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dlc.modules.api.entity.Goods" >
+    update goods
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null" >
+        categoryId = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="freight != null" >
+        freight = #{freight,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="carouselImgUrl != null" >
+        carouselImgUrl = #{carouselImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarkImgUrl != null" >
+        remarkImgUrl = #{remarkImgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteStatus != null" >
+        deleteStatus = #{deleteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dlc.modules.api.entity.Goods" >
+    update goods
+    set userId = #{userId,jdbcType=BIGINT},
+      categoryId = #{categoryId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      freight = #{freight,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      carouselImgUrl = #{carouselImgUrl,jdbcType=VARCHAR},
+      remarkImgUrl = #{remarkImgUrl,jdbcType=VARCHAR},
+      deleteStatus = #{deleteStatus,jdbcType=TINYINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--商品列表展示：根据上架状态-->
+  <select id="showGoodsList" resultType="map" parameterType="map">
+    SELECT * from goods WHERE status = #{status} AND deleteStatus=0 AND userId=#{userId}
+    ORDER BY createTime DESC LIMIT #{offset}, #{limit}
+  </select>
+  <!--商品上架/下架-->
+  <update id="changeGoodsToDown">
+    UPDATE goods set `status` = #{status} WHERE id=#{id}
+  </update>
+
+  <!--查询商品分类信息/根据分类Id查询分类名称-->
+  <select id="goodsCategoryList" resultType="com.dlc.modules.api.entity.GoodsCategory">
+    SELECT * FROM goods_category
+  </select>
+
+
+
+  <!--添加购物车,商品数量+1-->
+  <insert id="AddShopCar" parameterType="com.dlc.modules.api.entity.Goods">
+    insert into shopping_car(userId,goodsId,goodsNum,
+    categoryName,goodsName,goodsImgUrl,price,createTime)
+    VALUES
+    (#{userId},#{id},#{hitCount},#{cateName},#{name},#{imgUrl},#{price},NOW())
+
+  </insert>
+
+  <!--根据分类Id查询分类名称-->
+  <select id="searchCateNameBycateId" parameterType="java.lang.Integer" resultType="java.lang.String">
+    SELECT * FROM goods_category WHERE id=#{categoryId}
+  </select>
+
+  <!--设置默认地址-->
+  <!--<update id="changeAddressStatus">
+    UPDATE address SET isDefault=#{isDefault} WHERE addressId=#{addressId}
+  </update>-->
+
+  <!--管理端：商品列表展示(含搜索)-->
+  <select id="shopCategoryList" parameterType="map" resultType="map">
+    SELECT a.id AS goodsId,a.imgUrl,a.`name`,a.price,a.freight,a.categoryId,b.`name` AS categoryName FROM goods a LEFT JOIN
+    goods_category b on a.categoryId=b.id
+    <where>
+      <if test="name != null">
+        AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+      </if>
+      <if test="categoryId!=null">
+        AND b.id=#{categoryId}
+      </if>
+      AND a.status=1
+    </where>
+    ORDER BY createTime DESC limit #{offset}, #{limit}
+  </select>
+
+  <!--总记录条数-->
+  <select id="showGoodsListCount" parameterType="map" resultType="java.lang.Integer">
+    SELECT COUNT(1) from goods WHERE status = #{status} AND deleteStatus=0
+  </select>
+
+  <select id="CategoryListCount" parameterType="map" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM goods a LEFT JOIN
+    goods_category b on a.categoryId=b.id
+    <where>
+      <if test="name != null">
+        AND a.name LIKE CONCAT(CONCAT('%',#{name},'%'))
+      </if>
+      <if test="categoryId!=null">
+        AND b.id=#{categoryId}
+      </if>
+    </where>
+  </select>
+  <!--根据商品Id查询商品详情-->
+  <select id="goodsDetails" resultType="map" parameterType="java.lang.Long">
+    SELECT g.carouselImgUrl,g.userId AS producer,g.createTime,g.freight,g.imgUrl,
+    (SELECT SUM(goodsNum) from order_detail <![CDATA[  WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY)<=createTime AND goodsId =#{id}) ]]>
+    AS monthlySales,g.`name`,g.price,g.remark,g.remarkImgUrl,
+    c.`name` AS cateName FROM goods g
+    LEFT JOIN goods_category c on g.categoryId=c.id WHERE  g.id=#{id}
+  </select>
+
+  <!--购物车列表-->
+  <select id="shopCarList" parameterType="java.lang.Long" resultType="com.dlc.modules.api.entity.ShoppingCar">
+    select s.goodsName,s.goodsImgUrl,s.price,s.categoryName,s.goodsNum from shopping_car s WHERE userId=#{userId} ORDER BY createTime DESC
+  </select>
+
+  <select id="placeAnOrder" resultType="map" parameterType="java.lang.Long">
+    select s.goodsName,s.goodsImgUrl,s.price,s.categoryName,s.goodsNum,a.`name`,a.phone,a.province,a.addr from shopping_car s
+LEFT JOIN address a on s.userId=a.userId
+  WHERE s.userId=#{userId} AND a.isDefault=1 AND goodsId IN (${goodsId})
+  </select>
+
+  <!--根据商品Id查询商品-->
+  <select id="queryGoodsById" parameterType="java.lang.Long" resultType="com.dlc.modules.api.entity.Goods">
+    SELECT g.id, userId, categoryId, g.name, price, imgUrl, status, freight, remark, carouselImgUrl,c.name AS cateName,
+    remarkImgUrl, deleteStatus, createTime FROM goods g
+    LEFT JOIN goods_category c on c.id=g.categoryId WHERE g.id=#{id}
+  </select>
+</mapper>

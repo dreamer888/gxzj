@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>纸巾机设备表</title>
+    <#include "/header.html">
+
+        <style>
+            .logo {
+                display: inline-block;
+                text-align: center;
+                margin-right: 15px;
+            }
+            .logo .logo_img{
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+            .logo .upload_file {
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+            .upload {
+                margin: 5px 0 15px 0px;
+            }
+
+
+			.list-unstyled li{
+				padding-left: 10px;
+				line-height: 25px;
+				border-bottom: 1px solid #ccc;
+				color: #777;
+			}
+			.list-unstyled li:hover{
+				background-color: #ccc;
+				cursor: pointer;
+			}
+			.upload-button {
+				position: fixed;
+				bottom: 0px;
+				right: 20px;
+			}
+			.submit-btn {
+				height: 28px;
+				line-height: 28px;
+				margin: 0 6px;
+				padding: 0 15px;
+				border: 1px solid #dedede;
+				background-color: #019f95;
+				color: #333;
+				border-radius: 2px;
+				font-weight: 400;
+				cursor: pointer;
+				text-decoration: none;
+			}
+			.cancel-btn {
+				height: 28px;
+				line-height: 28px;
+				margin: 0 6px;
+				padding: 0 15px;
+				border: 1px solid #dedede;
+				background-color: #f1f1f1;
+				color: #333;
+				border-radius: 2px;
+				font-weight: 400;
+				cursor: pointer;
+				text-decoration: none;
+			}
+			.daoru {
+				font-size: 13px;
+				position: relative;
+				margin: 20px 0 0 10px;
+				height: 24px;
+			}
+			.daoru .input_text {
+				width: 240px;
+				height: 24px;
+				line-height: 24px;
+				padding: 5px;
+				border: 1px solid #C0C5CB;
+				font-size: 12px;
+				color: #333;
+			}
+			.daoru .input_sub {
+				width: 60px;
+				height: 24px;
+				line-height: 24px;
+				text-align: center;
+				font-size: 13px;
+				color: #fff;
+				border: none;
+				background: #019f95;
+				vertical-align: bottom;
+			}
+			.daoru .input_file {
+				position: absolute;
+				top: 0;
+				left: 99px;
+				height: 24px;
+				_height: 30px;
+				filter: alpha(opacity : 0);
+				opacity: 0;
+				width: 318px
+			}
+
+        </style>
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <#if shiro.hasPermission("sys:device:save")>
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            </#if>
+
+            <#if shiro.hasPermission("sys:device:update")>
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            </#if>
+
+            <#if shiro.hasPermission("sys:device:delete")>
+			    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if>
+            <#if shiro.hasPermission("sys:device:generateQrCode")>
+                <a class="btn btn-primary" @click="generateQrCode"><i class="fa fa-qrcode"></i>&nbsp;生成二维码</a>
+            </#if>
+			<#if shiro.hasPermission("sys:device:importExcel")>
+				<a class="btn btn-primary" @click="openUpload"><i class="fa fa-sign-in"></i>&nbsp;导入设备</a>
+			</#if>
+
+			<a class="btn btn-primary" @click="exportExcel"><i class="fa fa-download"></i>&nbsp;导出Excel</a>
+
+			<#if shiro.hasPermission("sys:device:save")>
+				<a class="btn btn-primary" @click="addRelation"><i class="fa fa-plus"></i>&nbsp;绑定代理商</a>
+			</#if>
+			<#if shiro.hasPermission("sys:device:save")>
+				<a class="btn btn-primary" @click="modifyRelation"><i class="fa fa-plus"></i>&nbsp;其他操作</a>
+			</#if>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList2" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">设备编号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="device.deviceNo" placeholder="设备编号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">设备IMEI</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="device.imei" placeholder="设备IMEI"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">设备地址详情</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="device.addressDetail" placeholder="设备地址详情"/>
+			    </div>
+			</div>
+
+									<!--<div class="form-group">
+			   	<div class="col-sm-2 control-label">代理人Id</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="device.proxyId" placeholder="代理人Id"/>
+			    </div>
+			</div>-->
+									<!--<div class="form-group">
+			   	<div class="col-sm-2 control-label">设备状态（1 在线 2离线 3故障）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="device.status" placeholder="设备状态（1 在线 2离线 3故障）"/>
+			    </div>
+			</div>-->
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设备状态</div>
+				<div class="form-group col-sm-10">
+					<select class="form-control" v-model="device.status">
+						<option value="1" >在线</option>
+						<option value="2" >离线</option>
+						<option value="3" >故障</option>
+					</select>
+				</div>
+			</div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="device.goodsName" placeholder="商品名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品单价(元)</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="device.goodsPrice" placeholder="设备里面商品的单价"/>
+                </div>
+            </div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">商品库存</div>
+			   	<div class="col-sm-10">
+			      <input type="number" class="form-control" v-model="device.inventory" placeholder="商品库存"/>
+			    </div>
+			</div>
+
+            <div id="images" class="">
+                <div class="col-sm-2 control-label">商品图片</div>
+                <div class="logo">
+                    <img @click="preview" src="../../statics/img/addPhoto.svg" layer-src="../../statics/img/addPhoto.svg" class="logo_img">
+                    <a class="btn btn-primary btn-xs upload">上传</a>
+                </div>
+            </div>
+
+
+
+
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+
+	<div v-show="!showaddAgent" class="panel panel-default">
+		<div class="panel-heading">绑定代理商</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设备编号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="device.deviceNo" placeholder="设备编号" disabled="disabled"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设备imei</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="device.imei" placeholder="设备imei" disabled="disabled"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"><span style="color:red">*</span>代理商</div>
+				<div class="col-sm-10">
+					<!--<input type="text" class="form-control" v-model="qdShop.shopType" placeholder="门店类型"/>-->
+					<select  class="form-control select" v-model="device.agentId">
+						<!--<option value="">请选择</option>-->
+						<option v-for="item in agentType2" :value="item.id">
+							{{ item.name }}</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">库存</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="device.inventory" placeholder="库存"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveRelationInfo" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+
+	<div v-show="!showOther" class="panel panel-default">
+		<div class="panel-heading">其他操作</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设备编号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="device.deviceNo" placeholder="设备编号" disabled="disabled"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设备imei</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="device.imei" placeholder="设备imei" disabled="disabled"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"><span style="color:red">*</span>变更代理商</div>
+				<div class="col-sm-10">
+					<!--<input type="text" class="form-control" v-model="qdShop.shopType" placeholder="门店类型"/>-->
+					<select  class="select" v-model="device.agentId">
+						<option value="">请选择</option>
+						<option v-for="item in agentType2" :value="item.id">
+							{{ item.name }}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"><span style="color:red">*</span>迁移</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="device.addr" placeholder="迁移地址" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="modifyRelationInfo" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+
+	<!-- 导入excel -->
+	<div id="uploadDialog" style="display: none;">
+		<form id="form1" enctype="multipart/form-data" method="post">
+			<div class="form-group">
+				<div style="margin:5px;">
+					<a class="btn btn-primary" @click="downLoadTemplate"><i class="fa fa-download"></i>&nbsp;下载模板</a>
+				</div>
+			</div>
+			<div class="form-group daoru">导入文件路径：
+				<input type="text" class="input_text" id="textfield">
+				<input type="button" class="input_sub"  value="浏览..." >
+				<input type="file" name="excelFile" class="input_file" contenteditable="false"  onchange="document.getElementById('textfield').value=this.value">
+			</div>
+			<div class="form-group upload-button">
+				<input id="submitBtn" @click="uploadFile" class="submit-btn" type="button" value="提交">
+				<input class="cancel-btn" @click="cancelBtn" type="button" value="取消">
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<script src="${request.contextPath}/statics/plugins/jquery.form.js"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/device.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dlc.modules.sys.dao.GlWalletDetailDao" >
+
+  <select id="queryObject" resultType="com.dlc.modules.sys.entity.GlWalletDetailEntity">
+    select * from gl_wallet_detail where id = #{value}
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(*) from gl_wallet_detail gl
+    <where>
+      <if test="type !=null and type !=''">
+        AND gl.type = #{type}
+      </if>
+      <if test="startTime != null and !''.equals(startTime)">
+        AND gl.createTime <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and !''.equals(endTime)">
+        AND gl.createTime <![CDATA[<=]]> #{endTime}
+      </if>
+    </where>
+  </select>
+
+    <insert id="save" parameterType="com.dlc.modules.sys.entity.GlWalletDetailEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into gl_wallet_detail
+        (
+        `type`,
+        `money`,
+        `createTime`
+        )
+        values
+        (
+        #{type},
+        #{money},
+        #{createTime}
+        )
+    </insert>
+
+  <select id="queryListMapByMap" resultType="map">
+    select
+    *
+    from gl_wallet_detail t
+    <where>
+      <if test="type !=null and type !=''">
+        AND t.type = #{type}
+      </if>
+      <if test="startTime != null and !''.equals(startTime)">
+        AND t.createTime <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and !''.equals(endTime)">
+        AND t.createTime <![CDATA[<=]]> #{endTime}
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by createTime desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="payment" resultType="map">
+    select
+    sum(money) money,type,from_days(TO_DAYS(createTime)) createTime
+    from gl_wallet_detail gl
+    <where>
+      type = 4
+      <if test="startTime != null and !''.equals(startTime)">
+        AND gl.createTime <![CDATA[>=]]> #{startTime}
+      </if>
+      <if test="endTime != null and !''.equals(endTime)">
+        AND gl.createTime <![CDATA[<=]]> #{endTime}
+      </if>
+    </where>
+    GROUP BY TO_DAYS(createTime)
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by createTime desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="paymentTotal" resultType="int">
+    select count(*) from (select * from gl_wallet_detail where  type = 4 GROUP BY TO_DAYS(createTime)) a1
+  </select>
+
+  <select id="moneyTotal" resultType="int">
+    select (ifnull((SELECT sum(money) from gl_wallet_detail WHERE type !=4),0) - ifnull((SELECT sum(money) from gl_wallet_detail WHERE type  =4),0))
+  </select>
+  <!--广告充值记录-->
+  <insert id="insertGwInfo">
+    INSERT INTO gl_wallet_detail (id,type,money,creatTime) values (#{id},#{type},#{money},#{creatTime})
+  </insert>
+</mapper>
